@@ -1,0 +1,81 @@
+/***************************************************************************
+*******************
+*
+* This is a simple general purpose web counter CGI which is automatically
+* executed when an HTML document is accessed.
+*
+* The following command should be included in the desired HTML
+* file.
+*
+* Syntax:
+*
+*    <!--#exec cmd="/stuweb/cgi-bin/count FILENAME ND" -->
+*
+*        <!-- ... -->                     : Syntax for server side command.
+*        #exec cmd="/stuweb/cgi-bin/count : This executes the program.
+*        FILENAME                         : This is required.  It is the full
+*                                           pathname on the file where the 
+*                                           page count in maintained.  Each
+*                                           page must have its own file.  
+*                                           NOTE: This is NOT the URL address.
+*        ND                               : If this flag is present, the count
+*                                           will NOT be displayed on the page.
+*
+****************************************************************************
+*****************/
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define TRUE    1
+
+/***************************************************************************
+******************/
+main (int argc, char *argv[])
+    {
+    char number[256];
+    FILE *fil;
+    int  i, len, value, display;
+
+    if (argc == 3) display = !(strcmp ("ND", argv[2]) == 0);
+    else           display = TRUE;
+
+    fil = fopen (argv[1], "r");
+    if (fil == NULL) {
+        printf ("Cannot find file %s<br>\n", argv[1]);
+        exit (-1);
+        }
+
+    fscanf (fil, "%s", number);
+    sscanf (number, "%d", &value);
+
+    if (display) {
+        len = strlen (number);
+
+        for (i=0;i<len;i++) {
+            switch (number[i])
+                {
+            case '0': printf ("<img border=\"0\" width=15 height=20 src=\"http://jcv.ninds.nih.gov/count/numbers/0.gif\">");  break;
+            case '1': printf ("<img border=\"0\" width=15 height=20 src=\"http://jcv.ninds.nih.gov/count/numbers/1.gif\">");  break;
+            case '2': printf ("<img border=\"0\" width=15 height=20 src=\"http://jcv.ninds.nih.gov/count/numbers/2.gif\">");  break;
+            case '3': printf ("<img border=\"0\" width=15 height=20 src=\"http://jcv.ninds.nih.gov/count/numbers/3.gif\">");  break;
+            case '4': printf ("<img border=\"0\" width=15 height=20 src=\"http://jcv.ninds.nih.gov/count/numbers/4.gif\">");  break;
+            case '5': printf ("<img border=\"0\" width=15 height=20 src=\"http://jcv.ninds.nih.gov/count/numbers/5.gif\">");  break;
+            case '6': printf ("<img border=\"0\" width=15 height=20 src=\"http://jcv.ninds.nih.gov/count/numbers/6.gif\">");  break;
+            case '7': printf ("<img border=\"0\" width=15 height=20 src=\"http://jcv.ninds.nih.gov/count/numbers/7.gif\">");  break;
+            case '8': printf ("<img border=\"0\" width=15 height=20 src=\"http://jcv.ninds.nih.gov/count/numbers/8.gif\">");  break;
+            case '9': printf ("<img border=\"0\" width=15 height=20 src=\"http://jcv.ninds.nih.gov/count/numbers/9.gif\">");  break;
+                }
+            }   
+
+
+
+        printf ("\n");
+        }
+    fclose (fil);
+
+    fil = fopen (argv[1], "w");
+    fprintf (fil, "%d\n", value+1);
+    fclose (fil);
+    }
