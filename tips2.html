@@ -1,0 +1,292 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta name="generator" content=
+    "HTML Tidy for Windows (vers 14 February 2006), see www.w3.org">
+    <title>
+      Tips 2
+    </title>
+    <meta name="GENERATOR" content="Arachnophilia 3.4">
+    <meta name="FORMATTER" content="Arachnophilia 3.4">
+    <link type="text/css" rel="stylesheet" href="stil-grau.css">
+  </head>
+  <body background="bilder/grauer_hintergrund.png" bgcolor="#C0C0C0" text="#000000" link= 
+  "#0000FF" vlink="#800080" alink="#FF0000">
+    <center>
+<font size="6" color="#000000" face="Verdana, Arial,Helvetica,Sans-Serif,MS Sans 
+       Serif,Times New Roman"><b>Tips 2</b></font>
+      <br>
+      (unsorted and as &quot;as is&quot;)
+      <br>
+      <p>
+        (go back to <a href="tips1.html">Tips 1</a>)
+        <br>
+        (continue to <a href="tips3.html">Tips 3</a>)
+      </p>
+    </center>
+    <hr width="95%" align="center">
+    <center>
+<font size="2" color="#000000" face="Verdana, Arial,Helvetica,Sans-Serif,MS Sans 
+       Serif">For general tips how to optimize your computer, for tricks and other
+      secrets got ot <a href="http://members.aol.com/axcel216/axcel216.htm" target=
+      "_blank">AXCEL216</a> or visit <a href="komposter.html">my little page</a> which
+      showes what I did to make work on the &quot;Komposter&quot; a little bit more
+      pleasant.</font>
+    </center>
+    <hr width="95%" size="3" align="center">
+    <!--
+            ************* Beginn der einzelnen Punkte **************-->
+    <h3>
+      <!-- Fix ASPI -->
+       Fix ASPI
+    </h3>
+    <p>
+      If you got problems with ASPI after installing the driver from Adaptec on Windows
+      XP try this fix I found somewere on the net. Download the fixASPI package <a href= 
+      "dateien/fixASPI.zip">here</a> and the Adaptec driver <a href= 
+      "http://www.adaptec.com/en-US/downloads/ms/ms_win_xp?productId=ASPI-4.70&amp;dn=Windows+ASPI+Package"
+      target="_blank">here</a>.
+    </p>
+    <ol>
+      <li>Check you previous installation
+        <br>
+        * run ASPICHK (included in the aspi_v471.exe )
+        <br>
+        * if WOWPOST.EXE or WINASPI.DLL show up and you are running winXP then search for
+        those files in your windows directory (inc subdirs and hidden files) and DELETE
+        them they are not needed for aspi on XP.
+      </li>
+      <li>install ASPI 4.71 ( or later ) from adaptec
+      http://www.adaptec.com/worldwide/support/drivers_by_product.html?sess=no&amp;cat=%2fProduct%2fASPI-4.70&amp;prodkey=ASPI-4.70
+        <br>
+        Use the INSTALL.BAT to install after unzipping to make sure the correct files
+        only are installed.
+      </li>
+      <li>Windows NT/2K/XP MUST have these reg keys added if they aren&#39;t allready,
+      otherwise some apps (EAC, audiocatalyst, CDRWIN) won&#39;t show any aspi devices at
+      all:
+        <br>
+        <br>
+        <pre>
+   [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\ASPI32\Parameters]
+    &quot;ExcludeMiniports&quot;=&quot;&quot;
+
+    [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\ASPI32]
+    &quot;ErrorControl&quot;=dword:00000001
+    &quot;Start&quot;=dword:00000002
+    &quot;Type&quot;=dword:00000001
+</pre>double click the included .reg file to add these if you are not experienced editing
+the registry, as the adaptec installer currently doesn&#39;t set all of these up, this is
+the source of everyones problems.
+      </li>
+      <li>reboot.
+      </li>
+    </ol>
+    <p>
+      This has worked on EVERY XP/2K box I&#39;ve tried but, if it still doesn&#39;t
+      work, try changing &quot;Start&quot;=dword:00000002 to
+      &quot;Start&quot;=dword:00000001 in the .reg file then run it again, and then
+      reboot.
+      <br>
+      Yakumo
+      <br>
+      www.clan-unreal.com
+ <hr width="95%" size="3" align="center">
+    </p><!-- Integrate Mozilla Thunderbird as an external mail application into Opera -->
+    <h3>
+      Integrate Mozilla Thunderbird as an external mail application into Opera
+    </h3>
+    <p>
+      Here is the string you can put into the Opera configuration dialog for an external
+      mail program to automatic start Thunderbird when clicking on a mailto link. Just
+      change the path to thunderbird.exe if you installed it into another directory.
+    </p>
+    <pre>
+C:\Program Files\Mozilla\Thunderbird\thunderbird.exe -compose &quot;mailto:%t?subject=%s&quot;
+</pre>
+    <hr width="95%" size="3" align="center">
+    <h3>
+      IOMega Zip 100 parallel Windows 2000 driver
+    </h3>
+    <p>
+      I was looking for the newest drivers for W2k for my old Zip parallel drive and,
+      hanging on the modem, didn&#39;t want to download the whole IOMega Tools package.
+      After some searching I finally found the right file from IOMega. It&#39;s called
+      the &quot;Parallel Port Slow Transfer Patch&quot;, quite a stupid name for a driver
+      file I think, and can be found at
+      <br>
+      <a href="http://www.iomega.com/software/win2kdriver_thanks.html" target=
+      "_blank">http://www.iomega.com/software/win2kdriver_thanks.html</a> .
+      <br>
+      The direct link to the file is <a href= 
+      "ftp://download.iomega.com/english/iodrv-w2kxp-x86-403.exe">ftp://download.iomega.com/english/iodrv-w2kxp-x86-403.exe</a>
+      .
+      <br>
+      While searching on Googles I found another nice <a href= 
+      "http://www.storagedrivers.com/companies/513.htm" target="_blank">page with a
+      collection of IOMega drivers</a>. It&#39;s at <a href= 
+      "http://www.storagedrivers.com/" target="_blank">www.storagedrives.com</a>.
+    </p>
+    <hr width="95%" size="3" align="center">
+    <h3>
+      Winhelp problem
+    </h3>
+    <p>
+      After installing some automatic updates on Win2k today (06.02.2003) on my machine I
+      wasn&#39;t able anymore to open the WinFAQ-Helpfile from <a href= 
+      "http://www.winfaq.de" target="_blank">www.winfaq.de</a>. I found the solution to
+      this problem <a href= 
+      "http://support.ca.com/techbases/eTrustadmin-DMO/ReadmeeTrust.html" target=
+      "_blank">here</a>. Here follows the important part (slightly edited).
+      <br>
+    </p>
+    <div align="center">
+      <b>Online Help Cannot Be Opened.</b>
+    </div>
+    <br>
+    Some systems may issue the following error message after a user clicks a help
+    icon/shortcut or *.hlp file:
+    <div align="center">
+      <font color="#FF0000">&quot;This file is not a Windows Help file.&quot;</font>
+      <br>
+      Followed by:
+      <br>
+      <font color="#FF0000">&quot;A newer version of Help is needed to read this Help
+      file.&quot;</font>
+      <br>
+    </div>These errors are due to incorrect Associations in Windows NT. You must
+    associate .HLP files with WINHLP32.EXE. By default, some systems associate the .HLP
+    files with WINHELP.EXE, which does not support the 32-bit help files provided.
+    <br>
+    <ul>
+      <li>If you get this error message, you can take the following steps to correct it:
+        <br>
+      </li>
+      <li>Start the File Manager (explorer.exe).
+        <br>
+      </li>
+      <li>Select Extras/Folder Options/File types.
+        <br>
+      </li>
+      <li>Type H in to got to the extensions starting with H.
+        <br>
+      </li>
+      <li>Select HLP. Click on &quot;Advanced&quot;. Select &quot;open&quot;.
+        <br>
+      </li>
+      <li>Click on &quot;Edit&quot; and change under &quot;Application used to perform
+      action:&quot; &quot;winhelp.exe&quot; to &quot;Winhlp32.Exe&quot;.
+        <br>
+      </li>
+      <li>Click OK/OK/Close and you are done.
+      </li>
+    </ul>
+    <br>
+    <br>
+    <hr width="95%" size="3" align="center">
+    <!--********************************************************-->
+    <h3>
+      Some fixes for the Registry
+    </h3>
+    <p>
+      On <a href="http://newlife-win98.server101.com/regfile/" target="_blank">this
+      site</a> I found some fixes for problems causes by errors in the registry. If the
+      original site isn&#39;t up anymore you can find my local copy <a href= 
+      "regfix/reg_fixes.htm">here</a>. The fixes include:
+    </p>
+    <ul>
+      <li>restore the alphabetical sort order to the Start and Programs Menus
+      </li>
+      <li>fix a problem that the Windows 95 SendToX Powertoy has with Windows 98
+      </li>
+      <li>set your max cached icons to 4096
+      </li>
+      <li>restore accidentally associated .LNK files
+      </li>
+      <li>cascading Programs Menu
+      </li>
+      <li>Open New Window when right clicking a link in IE5
+      </li>
+      <li>showing .jpg files as Preview while viewing Window as a Webpage
+      </li>
+    </ul>
+    <br>
+    <br>
+    <hr width="95%" size="3" align="center">
+    <p>
+<font size="+1" face="Verdana, Arial,Helvetica,Sans-Serif,MS Sans Serif,Times New 
+       Roman"><b>Black Icons, lost Icons, wrong Icons:</b></font>
+    </p>
+    <p>
+      If you got any of this problems your Icon-Cache, meaning the one of your Windows
+      9x/NT OS is probably screwed up. There are tools out there that can help you here,
+      f.e. TweakUI (a program I don&#39;t use). The easiest way is just to force Windows
+      to rebuild the Icon-Cache. To do this right-click on the Desktop, select
+      Properties, go to the Appearance and under Item: select Icon. Now change the size,
+      press apply (the Icon-Cache will be rebuild now), change the size back and press OK
+      (the Icon-Cache will be rebuild again). Your Desktop icons etc. should be fine now.
+    </p>
+    <br>
+    <hr width="95%" size="3" align="center">
+<font size="+1" face="Verdana, Arial,Helvetica,Sans-Serif,MS Sans Serif,Times New 
+     Roman"><b><a name="VectorNTIViewer" id="VectorNTIViewer">Free Vector NTI
+    Viewer</a></b>
+    <br></font> with a greater collection of restricton enzymes.
+    <br>
+    <p>
+      The free and fully functional Genbank-File Viewer from <a href= 
+      "http://register.informaxinc.com/solutions/vectornti/molecular_viewer.html" target= 
+      "_blank">Vector NTI</a> allows you, in contrast to the Demo Version of Vector NTI
+      Delux, to copy and print the sequence. A disadvantage of this program is its
+      limited number of restriction enzyms. To overcome this problem simply copy the
+      Restriction-Enzyme file (*.ea4) from the demo version of Vector NTI Delux into the
+      Viewer folder, backup the old &quot;enzyme.ea4&quot;-file and rename the new file
+      to <b>enzyme.ea4</b>. Now restart the program and you will have access to a much
+      greater number of enzymes.
+    </p>
+    <br>
+    <!-- ******* Abschlu&szlig; des Dokumentes ***************** -->
+
+    <br>
+    <hr size="9" width="99%" align="center">
+    <p>
+<font size="+1" color="#000000" face="Verdana, Arial,Helvetica,Sans-Serif,MS Sans 
+       Serif">This collection is made out of tips found all over the Web.
+      <br>
+      Places where I found some of the tips shown here and where you can find additonal
+      ones:</font>
+    </p>
+    <ul>
+      <li>
+<font size="+1" color="#000000" face="Verdana, Arial,Helvetica,Sans-Serif,MS Sans 
+         Serif"><a href="http://www.winfiles.com" target="_blank">Winfiles</a>
+        <font size="-1">(used to be a nice collection, now part of CNET)</font></font>
+      </li>
+      <li>
+        <a href="http://www.lockergnome.com">Lockergnome</a>
+      </li>
+      <li>
+        <a href="http://members.aol.com/axcel216/axcel216.htm">axcel216</a> <font size=
+        "-1">(the best site for tweaking your system)</font>
+      </li>
+      <li>
+        <a href="http://www.kellys-korner-xp.com/xp_tweaks.htm" target="_blank">Registry
+        Edits for Windows XP</a> &quot;Tweaks and Tips&quot;
+      </li>
+    </ul><!--INC:"heimatlink.inc"-->
+    <!-- ******************* Heimat Link *********************** -->
+    <hr size="6" width="99%" align="center">
+    <center>
+      <a href="heimat.ssi.shtml"><img src="bilder/homejump.gif" width="40" height="40"
+      alt="Heimat">
+      <br>
+      Home</a>
+    </center><!-- ******************* Heimat Link - Ende*********************** -->
+    <!--/INC:"heimatlink.inc"-->
+    <hr size="6" width="99%" align="center">
+    <center>
+<font size="1" color="#000000" face="Verdana, Arial,Helvetica,Sans-Serif,MS Sans 
+       Serif">Last update of this page: 27. April 2002<!--09. Juli 2001--></font>
+    </center>
+  </body>
+</html>

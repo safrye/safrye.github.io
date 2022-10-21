@@ -1,0 +1,79 @@
+  :link { color: rgb(0, 0, 153) }  /* for unvisited links */
+  :visited { color: rgb(153, 0, 153) } /* for visited links */
+/*  :active { color: rgb(255, 0, 102) } /* when link is clicked */
+/*  :hover { color: rgb(0, 96, 255) } /* when mouse is over link */
+  a.plain { text-decoration: none
+  }
+  body {
+	color: Black;
+	/*background: #F0F0F0;
+	*/
+	/*:background: #FFFFFF;
+	*/
+	margin-left: 10%;
+	margin-right: 10%;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	background : url(bilder/hg-grau1.jpg);
+}
+h1 { margin-left: -8%;
+       margin-top: 2em;
+       margin-bottom: 1em;
+       Text-Align: center;
+       Text-Decoration: underline;
+  }
+h2 { margin-left: -5%;
+       margin-top: 2em;
+		 		Text-Align: center;
+       margin-bottom: 1em;
+  }
+h3,h4,h5,h6
+            { margin-left: -3%
+              margin-top: 1.5em;
+              margin-bottom: 1em;}
+pre {
+	color: #2C3756;
+	font-weight: bold;
+	white-space: pre;
+	font-family: "Courier New", monospace;
+	font-size: 80%;
+	border: dotted Black;
+}
+  tt {
+     color: green
+  }
+  em {
+     font-style: italic;
+     font-weight: bold }
+  strong {
+     font-weight: bold
+  }
+ P {
+    Font-Size: smaller;
+ }
+  p.changed {
+    padding-left: 0.2em;
+    border-left: solid;
+    border-top: none;
+    border-bottom: none;
+    border-right: none;
+    border-left-width: thin;
+    border-color: red;
+  }
+li {
+	Font-Size: small;
+	margin-bottom: 0.2em;
+	margin-left: auto;
+	font-family: sans-serif;
+	list-style: disc;
+}
+
+    div.box {
+    border: solid;
+    border-width: thin;
+    width: 100%
+  }
+  div.color {
+    background: rgb(204,204,255);
+    padding: 0.5em;
+    border: none;
+  }

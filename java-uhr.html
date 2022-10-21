@@ -1,0 +1,136 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 //EN">
+<html>
+<head>
+<title>Java-Uhr</title>
+<meta name="author" content="l&yen;×">
+<meta name="generator" content="Ulli Meybohms HTML EDITOR">
+<link rel="stylesheet" href="stil-grau.css" type="text/css">
+
+<SCRIPT LANGUAGE="JavaScript">
+<!-- var
+myseconds="";
+var day="";
+var month="";
+var ampm="";
+var ampmhour="";
+var myweekday="";
+var year="";
+mydate = new Date();
+myday = mydate.getDay();
+mymonth = mydate.getMonth();
+myweekday= mydate.getDate();
+myseconds= mydate.getSeconds();
+weekday= myweekday;
+myyear= mydate.getYear();
+year = (myyear < 1900) ? myyear +1900 : myyear;
+myhours = mydate.getHours();
+ampmhour  =  (myhours > 12) ? myhours - 12 : myhours;
+ampm =  (myhours >= 12) ? 'PM' : 'AM';
+mytime = mydate.getMinutes();
+myminutes =  ((mytime < 10) ? ':0' : ':') + mytime;
+myseconds =  ((myseconds < 10) ? ':0' : ':') + myseconds;
+if(myday == 0)
+day = "Sun ";
+else if(myday == 1)
+day = "Mon ";
+else if(myday == 2)
+day = "Tues ";
+else if(myday == 3)
+day = "Wed ";
+else if(myday == 4)
+day = "Thur ";
+else if(myday == 5)
+day = "Fri ";
+else if(myday == 6)
+day = "Sat ";
+if(mymonth == 0) {
+month = "01";}
+else if(mymonth ==1)
+month = "02";
+else if(mymonth ==2)
+month = "03";
+else if(mymonth ==3)
+month = "04";
+else if(mymonth ==4)
+month = "05";
+else if(mymonth ==5)
+month = "06";
+else if(mymonth ==6)
+month = "07";
+else if(mymonth ==7)
+month = "08";
+else if(mymonth ==8)
+month = "09";
+else if(mymonth ==9)
+month = "10";
+else if(mymonth ==10)
+month = "11";
+else if(mymonth ==11)
+month = "12";
+// End -->
+</SCRIPT>
+
+</head>
+
+<script language="JavaScript">
+<!--
+function TimeLeft()
+{
+var ZielDatum = new Date(3000,0,0,0,0,0); // Hier muss immer das Datum geändert weden
+var Jetzt = new Date();
+var Time  = ZielDatum.getTime() - Jetzt.getTime();
+var Mod   = 0;
+var S = new String();
+Mod = Time % 1000; Time=(Time - Mod) / 1000;
+Mod = Time % 60; Time=(Time - Mod) / 60;
+S=Mod + (Mod==1 ? " second " : " sec ");
+Mod = Time % 60; Time=(Time - Mod) / 60;
+S=Mod + (Mod==1 ? " minute " : " min ") + S;
+Mod = Time % 24; Time=(Time - Mod) / 24;
+S=Mod + (Mod==1 ? " hour " : " h " ) + S;
+S=Time  + (Time==1 ? " Tag " : " Tage ") + S;
+window.document.test.time.value =   "" + S + "";
+setTimeout("TimeLeft()",1000);
+}
+//-->
+</script>
+
+<body onLoad="TimeLeft()" text="#000000" background="bilder/grauer_hintergrund.jpg" bgcolor="#FFFFFF" link="#FF0000" alink="#FF0000" vlink="#FF0000">
+
+<CENTER>
+        <TABLE CELLPADDING="3" bgcolor="#dcdcdc" width=250 border=2>
+        <TR>
+        <TD><font size=2 face="verdana, arial" color="black">
+           <CENTER><B>Noch</B>
+           <form name="test">
+           <input type="text" name="time" size=35 value="">
+           </form>
+           <B>bis zum Jahr 3000!</B></CENTER>
+           </font>
+        </TD>
+        </TR>
+        </TABLE>
+</CENTER>
+
+<!--INC:"heimatlink.inc"-->
+<!-- ******************* Heimat Link *********************** -->
+<hr size="6" width="99%" align="center">
+<center><a href="heimat.ssi.shtml"><img src="bilder/homejump.gif" width="40" height="40"
+alt="Heimat"><br>
+ Home</a></center>
+
+<!-- ******************* Heimat Link - Ende*********************** -->
+
+<!--/INC:"heimatlink.inc"-->
+
+<!--***********************************-->
+  <hr width="90%">
+<SCRIPT>
+document.write("<TABLE ALIGN='LEFT'><TR><TD BGCOLOR='#FFFFFF'><P ALIGN='LEFT' CLASS='list'><FONT COLOR='#FF0000' FACE='Arial'>Time Generated: </FONT><FONT  FACE='arial' COLOR='#000000'>"+ day + ampmhour + "" + myminutes + " " + ampm + "</FONT>");
+document.write("<FONT FACE='ARIAL' COLOR='#000000'> - " + month + "/" + myweekday + "/" + year + "</font></P></TD></TR></TABLE>");
+// End -->
+</SCRIPT>
+<!-- This document part source from http://plants.usda.gov/plants/cgi_bin/plant_profile.cgi?symbol=HEMA17 -->
+
+</body>
+</html>

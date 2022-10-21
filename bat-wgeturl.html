@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 //EN">
+<html>
+  <head>
+    <title>
+      wgeturl.bat
+    </title>
+    <meta name="author" content="Dr. Stephan Frye">
+    <meta name="description" content="">
+    <meta name="generator" content="HTML Studio">
+    <link type="text/css" rel="stylesheet" href="stil-grau.css">
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+  </head>
+  <body>
+  
+<pre>
+<font color=#ff0033 >@echo</font> <font color=#ff0033 >off</font>
+title wgeturl
+
+<font color=#ff0000 style="font-weight: bold; ">:</font><font color=#ff0000 style="font-weight: bold; ">:</font> Variablen setzen
+<font color=#ff0033 >set</font> url=%<font color=#0000ff style="font-weight: bold;">1</font>
+<font color=#ff0033 >set</font> lagermappe=E<font color=#ff0000 style="font-weight: bold; ">:</font>\Data_Privat\wget
+<font color=#ff0033 >set</font> wget="C<font color=#ff0000 style="font-weight: bold; ">:</font>\Program Files\WGet\wget.exe"
+
+
+<font color=#ff0000 style="font-weight: bold; ">:</font><font color=#ff0000 style="font-weight: bold; ">:</font> Wget starten
+<font color=#ff0000 style="font-weight: bold; ">:</font><font color=#ff0000 style="font-weight: bold; ">:</font> %wget% --tries=<font color=#0000ff style="font-weight: bold;">5</font> --no-clobber --no-host-directories -P"%lagermappe%" %url%
+
+%wget% -P"%lagermappe%" --no-host-directories -t10 -w2 --random-wait --waitretry=<font color=#0000ff style="font-weight: bold;">7</font> -U "Mozilla/<font color=#0000ff style="font-weight: bold;">4.03</font> [en] (X11; I; SunOS <font color=#0000ff style="font-weight: bold;">5.5.1</font> sun4u)" --referer="%url%" "%url%"
+
+<font color=#ff0000 style="font-weight: bold; ">:</font>Ende
+<font color=#ff0000 style="font-weight: bold; ">:</font><font color=#ff0000 style="font-weight: bold; ">:</font><font color=#ff0033 >pause</font>
+goto<font color=#ff0000 style="font-weight: bold; ">:</font>eof
+</pre>
+
+
+    <!--INC:"heimatlink.inc"-->
+    <!-- ******************* Heimat Link *********************** -->
+    <hr size="6" width="99%" align="center">
+    <center>
+      <a href="heimat.ssi.shtml"><img src="bilder/homejump.gif" width="40" height="40"
+      alt="Heimat">
+      <br>
+       Home</a>
+    </center>
+    <!-- ******************* Heimat Link - Ende*********************** -->
+    <!--/INC:"heimatlink.inc"-->
+  </body>
+</html>

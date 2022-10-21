@@ -1,0 +1,165 @@
+<Head>
+<Title>Oligo Calculator (corrected by SF)</Title>
+<SCRIPT LANGUAGE="JavaScript">
+ 
+function Calculate(form) {
+newOligo = new Oligo(form.oligoBox.value)
+form.oligoBox.value = newOligo.Sequence
+form.tmBox.value = newOligo.Tm()
+form.gcBox.value = newOligo.GC()
+form.mwBox.value = newOligo.MW()
+form.odBox.value = newOligo.OD()
+form.od2Box.value = newOligo.OD2()
+form.lBox.value = newOligo.Sequence.length
+}
+
+function Oligo(theString)
+{
+this.Sequence = RemoveNonBase(theString)
+this.aCount = CountChar(theString,"A")
+this.cCount = CountChar(theString,"C")
+this.gCount = CountChar(theString,"G")
+this.tCount = CountChar(theString,"T")
+this.Tm = Tm
+this.GC = GC
+this.MW = MW
+this.OD = OD
+this.OD2 = OD2
+}
+
+function OD()
+{
+if (this.Sequence.length > 0) {
+return Math.round(1000000/(this.gCount * 11.7 + this.cCount * 7.3 + this.aCount * 15.4 + this.tCount * 8.8))
+}
+else
+{
+return ""
+}
+}
+
+function OD2()
+{
+if (this.Sequence.length > 0) {
+return (Math.round(1000000/(this.gCount * 11.7 + this.cCount * 7.3 + this.aCount * 15.4 + this.tCount * 8.8))/1000)
+}
+else
+{
+return ""
+}
+}
+
+function MW()
+{
+if (this.Sequence.length > 0) {
+return Math.round(313.2 * this.aCount + 328.2 * this.gCount + 289.2 * this.cCount + 304.2 * this.tCount - 60.96)
+}
+else
+{
+return ""
+}
+}
+
+function GC()
+{
+if (this.Sequence.length > 0) {
+return Math.round( 100 * ( this.gCount + this.cCount ) / this.Sequence.length )
+}
+else
+{
+return ""
+}
+}
+
+function Tm()
+{
+		if (this.Sequence.length > 0) {
+		if (this.Sequence.length < 14) {
+			return  Math.round(2 * (this.aCount + this.tCount) + 4 * (this.gCount + this.cCount))
+			}
+		else {
+		return Math.round(64.9 + 41 * ((this.gCount + this.cCount - 16.4) / this.Sequence.length))
+			}
+			}
+		else {
+	return ""
+}
+}
+
+function RemoveNonBase(theString) {
+var returnString = ""
+theString = theString.toUpperCase()
+for ( var i = 0; i < theString.length; i++) {
+if ((theString.charAt(i) == "A") || (theString.charAt(i) == "G") || (theString.charAt(i) == "C") || (theString.charAt(i) == "T")) {
+returnString += theString.charAt(i)
+}
+}
+return returnString
+}
+
+function CountChar(theString,theChar) {
+var returnValue = 0
+theString = theString.toUpperCase()
+for ( var i = 0; i < theString.length; i++) {
+if (theString.charAt(i) == theChar) {
+returnValue ++
+}
+}
+return returnValue
+}
+
+function Disallow(form) {
+form.oligoBox.focus()
+}
+
+</SCRIPT>
+</Head>
+<Body>
+<Center>
+<H1>Oligo Calculator</H1>
+<Form action="GET">
+<table border ="6" align = center>
+
+<tr align="center">
+<td colspan=2 align=center>Enter Oligo Sequence in Box</td>
+</tr>
+
+<tr align="center">
+<td colspan=2 align=center>
+<TEXTAREA name="oligoBox" rows="2" cols="80" wrap=vitual align=left onChange="Calculate(this.form)"></TEXTAREA>
+</td>
+</tr>
+
+<tr><td>
+Length <Input name="lBox" size="5" onFocus="Disallow(this.form)">
+</td>
+<td>
+Melting Temperature (T<sub>m</sub>) <Input name="tmBox" size="4" onFocus="Disallow(this.form)"> &#176C
+</td></tr>
+
+<tr><td>
+<input name="gcBox" size="3" onFocus="Disallow(this.form)">% GC content
+</td><td>
+Molecular Weight: <input name="mwBox" size="9" onFocus="Disallow(this.form)"> daltons (g/mol)
+</td></tr>
+
+<tr><td>
+<center><input type="button" value="Calculate" name="Calbutton" onClick="Calculate(this.form)"></center></td>
+<td>
+OD of 1 is equal to <input name="odBox" size="9" onFocus="Disallow(this.form)"> <B><FONT COLOR=#ff0000>nano</FONT>Molar (nM = pmol/ml).</B><br>
+OD of 1 is equal to <input name="od2Box" size="9" onFocus="Disallow(this.form)"> <B><FONT COLOR=#ff0000>micro</FONT>Molar (µM = pmol/µl).
+</td>
+</tr>
+</table>
+</Form>
+To use this calculator, you must be using Netscape 2.0 or later.<br>
+This page was written in Javascript by <A HREF="mailto:buehler+@pitt.edu">Eugen Buehler</A><br>
+Research Support Facilities<br>
+Department of Molecular Genetics and Biochemistry<br>
+University of Pittsburgh School of Medicine<br>
+<hr width="95%" align=center>
+Corrected and modified by <A HREF="mailto:stephanf@uio-pop.uio.no">Stephan Frye</A> (Jan. 2000)<br>
+<hr width="95%" align=center>
+<A HREF ="http://www.embl-heidelberg.de/~toldo/index.html">  Back to MGB Research Support Facilities Home Page</A>
+</Center>
+</Body>

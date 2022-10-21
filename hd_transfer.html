@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 //EN">
+<html>
+  <head>
+    <title>
+      HD transfer
+    </title>
+    <meta name="author" content="Dr. Stephan Frye">
+    <meta name="description" content="Festplatte auswechseln von &lt;102GB zu &gt;120GB">
+    <meta name="keywords" content="HD WinXP">
+    <meta name="generator" content="HTML Studio">
+    <link type="text/css" rel="stylesheet" href="stil-grau.css">
+  </head>
+  <body background="bilder/hg-grau1.jpg" bgcolor="#ffffff" text="#000000" link="#0000ff"
+  vlink="#800080" alink="#ff0000">
+    <h1>
+      Transfer von einem WinXP System von einer Festplatte mit &lt;128GB zu einer
+      Festplatte mit &gt;128GB
+    </h1>
+    <h6>
+      Alle Angaben ohne Gew&auml;hr!
+    </h6>
+    <ul>
+      <li>
+        EnableBigLba
+        <br>
+        Das Werkzeug <a href="http://www.48bitlba.com/enablebiglbatool.htm" target=
+        "_blank">EnableBigLba Tool</a> and activiert in WinXP mit SP1 den
+        Registry-Eintrag zur Verwendung von Festplatten gr&ouml;&szlig;er als 128GB.
+        <br>
+        <img src="bilder/enablebiglba.gif">
+      </li>
+      <li>
+        Die neue Festplatte anschlei&szlig;en und vom BIOS und WinXP erkennen lassen.
+      </li>
+      <li>
+        Partition einrichten und formatieren der neuen Festplatte.
+      </li>
+      <li>
+        Das Werkzeug <a href=
+        "http://www.softpedia.com/get/System/Back-Up-and-Recovery/DrvClonerXP.shtml"
+        target="_blank">DrvClonerXP</a> &uuml;berf&uuml;hrt die Daten von einer
+        Festplatte auf die andere.
+        <br>
+        <img src="bilder/drvclonerxp.gif">
+      </li>
+      <li>
+        Nun die neue gro&szlig;e Festplatte mit der alten kleinen Festplatte im System
+        auswechseln. Dazu die Kabel umstecken und, wenn notwendig, die Jumper setzen.
+      </li>
+      <li>
+        <b>Falls man die Festplatte schon ohne "EnableBigLba" partitioniert, formatiert
+        und kopiert hat und den zus&auml;tzlichen Platz auf der neuen Festplatte
+        ausnutzen m&ouml;chte, kann man die NTFS-Partition wie folgt
+        vergr&ouml;&szlig;ern.</b>
+      </li>
+      <li>
+        <a href="http://mlf.linux.rulez.org/mlf/ezaz/ntfsresize.html" target=
+        "_blank">NTFSresize</a> auf der <a href="http://www.sysresccd.org/" target=
+        "_blank">System Rescue CD</a> unter Linux dazu verwenden die Partition auf der
+        neuen Festplatte auf maximale Gr&ouml;&szlig;e zu bringen.
+        <br>
+        <img src="bilder/system_rescue_cd.png">
+      </li>
+    </ul>
+    <!--INC:"heimatlink.inc"-->
+    <!-- ******************* Heimat Link *********************** -->
+    <hr size="6" width="99%" align="center">
+    <center>
+      <a href="heimat.ssi.shtml"><img src="bilder/homejump.gif" width="40" height="40"
+      alt="Heimat">
+      <br>
+       Home</a>
+    </center>
+    <!-- ******************* Heimat Link - Ende*********************** -->
+    <!--/INC:"heimatlink.inc"-->
+  </body>
+</html>

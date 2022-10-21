@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 //EN">
+<html>
+  <head>
+    <title>
+      Titel
+    </title>
+    <meta name="author" content="Dr. Stephan Frye">
+    <meta name="description" content="">
+    <meta name="generator" content="HTML Studio">
+    <link type="text/css" rel="stylesheet" href="stil-grau.css">
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+  </head>
+  <body>
+
+  <pre><font color=#ff0033 >@echo</font> <font color=#ff0033 >off</font>
+<font color=#ff0033 >title</font> Sequencing alignment
+
+:: Align several sequences to a reference sequence using the profile function of clustalw
+:: (c) Stephan A. Frye
+:: Version <font color=#0000ff style="font-weight: bold;">0.2a</font>, <font color=#0000ff style="font-weight: bold;">2012-08-21</font>
+
+<font color=#ff0033 >if</font> not exist %<font color=#0000ff style="font-weight: bold;">1</font>% <font color=#ff0033 >goto</font> <font color=#F75454>help</font>
+
+::Variablen setzen
+<font color=#ff0033 >set</font> _arbeitsweg_=c:\Dienst\bin
+<font color=#ff0033 >set</font> wprompt=%_arbeitsweg_%\wprompt.exe
+<font color=#ff0033 >set</font> winput=%_arbeitsweg_%\winput.exe
+<font color=#ff0033 >set</font> clustalw_weg="C:\Program Files\ClustalW2\clustalw2.exe"
+<font color=#ff0033 >set</font> editor="C:\Program Files\EditPad\EditPad.exe"
+<font color=#ff0033 >set</font> genedoc="C:\Program Files\GENEDOC\GENEDOC.EXE"
+
+<font color=#ff0033 >set</font> refseq=%<font color=#0000ff style="font-weight: bold;">1</font>
+::<font color=#ff0033 >set</font> ref_datei=%~n1.%~x1
+<font color=#ff0033 >set</font> refname=%~n1
+<font color=#ff0033 >set</font> weg=%~dp1
+::<font color=#ff0033 >echo</font> %weg%
+:: %weg% hat \ am Ende!
+
+
+:: Tempor&auml;res Unterverzeichnis erstellen
+<font color=#ff0033 >if</font> not exist %weg%tmp <font color=#ff0033 >md</font> %weg%tmp
+:: FASTA-Dateinen numerieren und kopieren
+<font color=#ff0033 >set</font> counter=<font color=#0000ff style="font-weight: bold;">1</font>
+<font color=#ff0033 >for</font> %%x in (%weg%*.fa) <font color=#ff0033 >do</font> <font color=#ff0033 >call</font> :copy_fa %%x
+<font color=#ff0033 >echo</font> %counter% files were copied.
+<font color=#ff0033 >echo</font> ----------------------------
+::<font color=#ff0033 >pause</font>
+
+:: erster Abgleich
+<font color=#ff0033 >call</font> :start_clustalw %refseq% %weg%tmp\1.fa %weg%outfile.tmp
+<font color=#ff0033 >del</font> /q %weg%tmp\1.fa
+
+:: Program aufrufen f&uuml;r zweiten bis letzten Abgleich
+:: Variablen                                   <font color=#0000ff style="font-weight: bold;">1</font>                <font color=#0000ff style="font-weight: bold;">2</font>   <font color=#0000ff style="font-weight: bold;">3</font>
+<font color=#ff0033 >for</font> %%x in (%weg%*.fa) <font color=#ff0033 >do</font> <font color=#ff0033 >call</font> :start_clustalw %weg%outfile.tmp %%x %weg%outfile.tmp
+::<font color=#ff0033 >Pause</font>
+
+:clean-up
+<font color=#ff0033 >rename</font> %weg%outfile.tmp %refname%-sekalign.msf
+<font color=#ff0033 >rmdir</font> /q /s %weg%tmp
+<font color=#ff0033 >del</font> /q %weg%*.dnd
+
+:start_genedoc
+<font color=#ff0033 >echo</font>.
+<font color=#ff0033 >echo</font> ---Opening the alignment with GeneDOC--------------------------------
+<font color=#F75454>start</font> %genedoc% %weg%%refname%-sekalign.msf
+<font color=#ff0033 >goto</font> Ende
+
+:: **********************************************************************************
+:: Unterprogramme
+
+:start_clustalw
+<font color=#ff0033 >echo</font>.
+<font color=#ff0033 >echo</font> ---Doing the alignments----------------------------------------------
+%clustalw_weg% -PROFILE1=%<font color=#0000ff style="font-weight: bold;">1</font> -PROFILE2=%<font color=#0000ff style="font-weight: bold;">2</font> -OUTFILE=%<font color=#0000ff style="font-weight: bold;">3</font> -SEQUENCES -<font color=#ff0033 >TYPE</font>=DNA -OUTPUT=GCG -QUICKTREE -OUTORDER=INPUT -KTUPLE=<font color=#0000ff style="font-weight: bold;">6</font> -TOPDIAGS=<font color=#0000ff style="font-weight: bold;">4</font> -WINDOW=<font color=#0000ff style="font-weight: bold;">6</font> -PAIRGAP=<font color=#0000ff style="font-weight: bold;">100</font>
+<font color=#ff0033 >goto</font>:eof
+
+:copy_fa
+<font color=#ff0033 >echo</font> File %<font color=#0000ff style="font-weight: bold;">1</font> is number %counter%
+<font color=#ff0033 >copy</font> /Y %<font color=#0000ff style="font-weight: bold;">1</font> %weg%tmp\%counter%.fa
+<font color=#ff0033 >set</font> /a counter+=<font color=#0000ff style="font-weight: bold;">1</font>
+<font color=#ff0033 >goto</font>:eof
+
+:<font color=#F75454>help</font>
+<font color=#ff0033 >echo</font>.
+<font color=#ff0033 >echo</font> -----------------------------------------------------------------------
+<font color=#ff0033 >echo</font> Input was: %<font color=#0000ff style="font-weight: bold;">1</font>
+<font color=#ff0033 >echo</font> -----------------------------------------------------------------------
+<font color=#ff0033 >echo</font> Usage:
+<font color=#ff0033 >echo</font> ------
+<font color=#ff0033 >echo</font> Put the reference sequence (in FASTA <font color=#F75454>format</font>) into one file
+<font color=#ff0033 >echo</font> and put all the sequence files with the extension *.fa, containing
+<font color=#ff0033 >echo</font> the sequences you want to align to the reference sequence in FASTA
+<font color=#ff0033 >echo</font> <font color=#F75454>format</font>, into the same folder.
+<font color=#ff0033 >echo</font>.
+<font color=#ff0033 >echo</font> <font color=#F75454>Start</font> this script by typing:
+<font color=#ff0033 >echo</font> sekalign.bat "folder_path"\"reference_sequence_file"
+<font color=#ff0033 >echo</font>.
+<font color=#ff0033 >echo</font> The programme will combine the *fa. files and <font color=#F75454>start</font> a profile
+<font color=#ff0033 >echo</font> alignment using alle the  sequences in the *.fa files.
+<font color=#ff0033 >echo</font>.
+<font color=#ff0033 >echo</font> The output will be multiple sequence file called output.msf.
+<font color=#ff0033 >echo</font>.
+<font color=#ff0033 >echo</font> -----------------------------------------------------------------------
+<font color=#ff0033 >echo</font>.
+<font color=#ff0033 >goto</font> Ende
+
+:Ende
+::<font color=#ff0033 >Pause</font>
+<font color=#ff0033 >exit</font></pre>
+
+  
+    <!--INC:"heimatlink.inc"-->
+    <!-- ******************* Heimat Link *********************** -->
+    <hr size="6" width="99%" align="center">
+    <center>
+      <a href="heimat.ssi.shtml"><img src="bilder/homejump.gif" width="40" height="40"
+      alt="Heimat">
+      <br>
+       Home</a>
+    </center>
+    <!-- ******************* Heimat Link - Ende*********************** -->
+    <!--/INC:"heimatlink.inc"-->
+  </body>
+</html>

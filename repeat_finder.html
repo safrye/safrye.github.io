@@ -1,0 +1,470 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 //EN">
+<html>
+  <head>
+    <title>
+      Titel
+    </title>
+    <meta name="author" content="Dr. Stephan Frye">
+    <meta name="description" content="">
+    <meta name="generator" content="HTML Studio">
+    <link type="text/css" rel="stylesheet" href="stil-grau.css">
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+  </head>
+  <body>
+  
+ This Perl script is originally from the "<a href="http://ibs-isb.nrc-cnrc.gc.ca/glycobiology/group_software_e.html" target="_blank">NRC Institute for Biological Sciences</a>"
+ and cited <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1626085/?tool=pubmed" target="_blank">here</a>.
+ <br>This copy is just for archiving purposes due to unavailability of the original source.
+
+
+  <pre><font color=#008000 >#!/usr/local/bin/perl</font>
+
+<font color=#008000 >## Program Info:</font>
+<font color=#008000 >#</font>
+<font color=#008000 ># Name: repeat_finder</font>
+<font color=#008000 >#</font>
+<font color=#008000 ># Purpose:</font>
+<font color=#008000 >#   Searches for DNA repeats in a sequence. It searches for every</font>
+<font color=#008000 >#   permutation of an n-mer, and reports the number of hits.</font>
+<font color=#008000 >#</font>
+<font color=#008000 ># Author: John Nash</font>
+<font color=#008000 >#</font>
+<font color=#008000 ># Copyright (c) National Research Council of Canada, 2002,</font>
+<font color=#008000 >#   all rights reserved.</font>
+<font color=#008000 >#</font>
+<font color=#008000 ># Licence: This script may be used freely as long as no fee is charged</font>
+<font color=#008000 >#   for use, and as long as the author/copyright attributions</font>
+<font color=#008000 >#   are not removed.</font>
+<font color=#008000 >#</font>
+<font color=#008000 ># History:</font>
+<font color=#008000 >#   4-12 July 2002: Alpha versions.</font>
+<font color=#008000 >#</font>
+<font color=#008000 >#</font>
+<font color=#008000 ># Thanks: To Ed Taboada for suggesting hashing the repeats</font>
+<font color=#008000 >#</font>
+<font color=#008000 ># To-do:  Put ranges in for command line switches</font>
+<font color=#008000 >##</font>
+
+<font color=#000080 style="font-weight: bold;">use</font> strict;
+<font color=#000080 style="font-weight: bold;">use</font> warnings;
+<font color=#000080 style="font-weight: bold;">use</font> Text::Wrap;
+$Text::Wrap::columns = <font color=#0000ff>65</font>;
+
+<font color=#000080 style="font-weight: bold;">my</font> $time_zero = <font color=#000080 style="font-weight: bold;">time</font>;
+
+<font color=#008000 ># who am I and where am I?</font>
+<font color=#000080 style="font-weight: bold;">my</font> $title = "repeat_finder";
+<font color=#000080 style="font-weight: bold;">my</font> $version = "1.13";
+<font color=#000080 style="font-weight: bold;">my</font> $date = "17 July, <font color=#0000ff>2002"</font>;
+<font color=#000080 style="font-weight: bold;">my</font> $error_msg = "Type \"$title -h\" <font color=#000080 style="font-weight: bold;">for</font> help.";
+<font color=#000080 style="font-weight: bold;">print</font> "$title $version (released $date)\n";
+
+<font color=#008000 >#  Command line switches:</font>
+<font color=#008000 >#    $nmer_query - size of the DNA sequence to be searched for repeats.</font>
+<font color=#008000 >#    $modifier - how many times larger than expected the nmer</font>
+<font color=#008000 >#      has to be present in order to be flagged and reported.</font>
+<font color=#008000 >#    $rank_hits - number of relevantly flagged hits to display.</font>
+<font color=#008000 >#    $sort_key - sort by number of hits or more than expected.</font>
+<font color=#008000 >#    $coords - do we display co_ordinates.</font>
+<font color=#008000 >#    $circular - is the sequence circular.</font>
+
+<font color=#008000 ># Get and process the command line params:</font>
+<font color=#008000 ># Returns array of $fasta_file and $orf_file;</font>
+<font color=#000080 style="font-weight: bold;">my</font> ($nmer_query, $rank_hits, $sort_key, $coords, $circular) =
+        process_command_line();
+
+<font color=#008000 >##  Handle the input sequence.</font>
+<font color=#008000 >## Does the input sequence exist:  handle errors</font>
+<font color=#008000 ># If $ARGV[0] is not blank, test for file's existence:</font>
+<font color=#000080 style="font-weight: bold;">if</font> (<font color=#000080 style="font-weight: bold;">defined</font> $<font color=#000080 style="font-weight: bold;">ARGV</font>[<font color=#0000ff>0</font>]) {
+        <font color=#000080 style="font-weight: bold;">unless</font> (-e $<font color=#000080 style="font-weight: bold;">ARGV</font>[<font color=#0000ff>0</font>]) {
+                <font color=#000080 style="font-weight: bold;">die</font>("\nError: Sequence file \'$<font color=#000080 style="font-weight: bold;">ARGV</font>[<font color=#0000ff>0</font>]\' does *not* exist. \n",
+                                $error_msg, "\n");
+        }
+        <font color=#000080 style="font-weight: bold;">open</font> (FILE, $<font color=#000080 style="font-weight: bold;">ARGV</font>[<font color=#0000ff>0</font>]);
+}
+
+<font color=#008000 ># If it has come in from a redirection or pipe, </font>
+<font color=#008000 >#  check it is bigger than 0:</font>
+<font color=#000080 style="font-weight: bold;">else</font> {
+        <font color=#000080 style="font-weight: bold;">my</font> $fh = *<font color=#000080 style="font-weight: bold;">STDIN</font>;
+        <font color=#000080 style="font-weight: bold;">unless</font> ((-p $fh) or (-<font color=#000080 style="font-weight: bold;">s</font> $fh)) {
+                <font color=#000080 style="font-weight: bold;">die</font>("\nError: Piped sequence file does *not* exist. \n",
+                                $error_msg, "\n");
+        }
+        *FILE = *<font color=#000080 style="font-weight: bold;">STDIN</font>;
+}
+
+
+<font color=#008000 ># Command-line range checks:</font>
+<font color=#000080 style="font-weight: bold;">if</font> ($nmer_query &lt;=<font color=#0000ff>2</font>) {
+        <font color=#000080 style="font-weight: bold;">die</font>("\nError: Nmer query-size has to be greater than <font color=#0000ff>2</font> \n",
+                        $error_msg, "\n");
+}
+
+$rank_hits = <font color=#0000ff>2</font> <font color=#000080 style="font-weight: bold;">if</font> ($rank_hits &lt; <font color=#0000ff>2</font>);
+
+<font color=#008000 >## Read in the sequence from a FASTA file:</font>
+<font color=#008000 >#   For multiple sequences, concatenate them with "&gt;".</font>
+<font color=#008000 >#   There is no reason for multiple sequences to be thus analysed</font>
+<font color=#008000 >#   unless they are contigs from a single project.</font>
+
+<font color=#000080 style="font-weight: bold;">my</font> ($seq_name, $seq_length, $seq_str1, $seq_str2, $count);
+<font color=#008000 ># read the header:</font>
+$count = <font color=#0000ff>0</font>;
+<font color=#000080 style="font-weight: bold;">while</font> (&lt;&gt;) {
+        <font color=#000080 style="font-weight: bold;">s</font>/\r\n/\n/g;
+        <font color=#000080 style="font-weight: bold;">chomp</font>;
+        <font color=#000080 style="font-weight: bold;">if</font> (/^&gt;/)  {
+                $seq_name = <font color=#000080 style="font-weight: bold;">substr</font>($_, <font color=#0000ff>1</font>, <font color=#000080 style="font-weight: bold;">length</font> $_);
+                $seq_str1 .= "&gt;" <font color=#000080 style="font-weight: bold;">if</font> ($count &gt; <font color=#0000ff>0</font>);
+                $count++;
+        }
+        <font color=#000080 style="font-weight: bold;">else</font> {
+                $seq_str1 .= <font color=#000080 style="font-weight: bold;">uc</font> $_;
+        }
+}
+
+<font color=#008000 ># Some final sequence processing:</font>
+$seq_length = <font color=#000080 style="font-weight: bold;">length</font> $seq_str1;
+$seq_str1 = <font color=#000080 style="font-weight: bold;">uc</font> $seq_str1;
+
+<font color=#008000 ># Eliminate all nonACGTs:</font>
+$seq_str1 =~ <font color=#000080 style="font-weight: bold;">tr</font>/XNATGCBDKRVHMYSW/XXATGCXXXXXXXXXX/;
+$seq_str2 = <font color=#000080 style="font-weight: bold;">reverse</font>($seq_str1);
+$seq_str2 =~ <font color=#000080 style="font-weight: bold;">tr</font>/XNATGCBDKRVHMYSW/XXTACGXXXXXXXXXX/;
+
+<font color=#008000 >## Hash search routine:</font>
+<font color=#008000 ># Search for each nmer string by hashing it from the sequence:</font>
+<font color=#000080 style="font-weight: bold;">print</font> <font color=#000080 style="font-weight: bold;">STDERR</font> "** Hashing all ",$nmer_query,"-mers...";
+
+<font color=#008000 ># Holds the hits:</font>
+<font color=#000080 style="font-weight: bold;">my</font> %nmers_t;
+<font color=#000080 style="font-weight: bold;">my</font> $k;
+
+<font color=#008000 ># First strand:</font>
+<font color=#000080 style="font-weight: bold;">print</font> <font color=#000080 style="font-weight: bold;">STDERR</font> "  First strand...";
+
+<font color=#008000 ># Account for circularity (add $nmer's of sequence from the </font>
+<font color=#008000 ># start to the end)</font>
+$seq_str1 .= <font color=#000080 style="font-weight: bold;">substr</font> $seq_str1, <font color=#0000ff>0</font>, $nmer_query <font color=#000080 style="font-weight: bold;">if</font> ($circular <font color=#000080 style="font-weight: bold;">eq</font> "yes");
+
+<font color=#000080 style="font-weight: bold;">for</font> (<font color=#0000ff>1..</font>((<font color=#000080 style="font-weight: bold;">length</font> $seq_str1) - $nmer_query)) {
+        $k = <font color=#000080 style="font-weight: bold;">substr</font> $seq_str1, $_, $nmer_query;
+<font color=#008000 ># remove Ns, Xs and the "between sequence delimiter" '&gt;':</font>
+        <font color=#000080 style="font-weight: bold;">next</font> <font color=#000080 style="font-weight: bold;">if</font> ($k =~ /X/);
+        <font color=#000080 style="font-weight: bold;">next</font> <font color=#000080 style="font-weight: bold;">if</font> ($k =~ /&gt;/);
+        $nmers_t{$k}++;
+}
+
+<font color=#008000 ># Second strand:</font>
+<font color=#008000 ># reverse-complement the sequence:</font>
+<font color=#000080 style="font-weight: bold;">print</font> <font color=#000080 style="font-weight: bold;">STDERR</font> "  Second strand...\n";
+$seq_str2 .= <font color=#000080 style="font-weight: bold;">substr</font> $seq_str2, <font color=#0000ff>0</font>, $nmer_query <font color=#000080 style="font-weight: bold;">if</font> ($circular <font color=#000080 style="font-weight: bold;">eq</font> "yes");
+
+<font color=#000080 style="font-weight: bold;">for</font> (<font color=#0000ff>1..</font>((<font color=#000080 style="font-weight: bold;">length</font> $seq_str2) - $nmer_query)) {
+        $k = <font color=#000080 style="font-weight: bold;">substr</font> $seq_str2, $_, $nmer_query;
+<font color=#008000 ># remove Ns, Xs and the "between sequence delimiter" '&gt;':</font>
+        <font color=#000080 style="font-weight: bold;">next</font> <font color=#000080 style="font-weight: bold;">if</font> ($k =~ /X/);
+        <font color=#000080 style="font-weight: bold;">next</font> <font color=#000080 style="font-weight: bold;">if</font> ($k =~ /&gt;/);
+        $nmers_t{$k}++;
+}
+
+<font color=#000080 style="font-weight: bold;">print</font> <font color=#000080 style="font-weight: bold;">STDERR</font> "** Found elements: ", <font color=#000080 style="font-weight: bold;">scalar</font> (<font color=#000080 style="font-weight: bold;">keys</font> %nmers_t), ";";
+<font color=#000080 style="font-weight: bold;">print</font> <font color=#000080 style="font-weight: bold;">STDERR</font> " Theoretical answer: ", <font color=#0000ff>4</font>**$nmer_query, "\n";
+
+<font color=#008000 ># Calculating incomings ACGT content:</font>
+<font color=#000080 style="font-weight: bold;">my</font> ($As, $Cs, $Gs, $Ts, $totalACGT, $fractA, $fractC, $fractG, $fractT);
+$As = ($seq_str2 =~ <font color=#000080 style="font-weight: bold;">tr</font>/A//);
+$Cs = ($seq_str2 =~ <font color=#000080 style="font-weight: bold;">tr</font>/C//);
+$Gs = ($seq_str2 =~ <font color=#000080 style="font-weight: bold;">tr</font>/G//);
+$Ts = ($seq_str2 =~ <font color=#000080 style="font-weight: bold;">tr</font>/T//);
+$totalACGT = $As + $Cs + $Gs + $Ts;
+
+<font color=#008000 ># Convert to 2 decimal places:</font>
+$fractA = <font color=#000080 style="font-weight: bold;">sprintf</font>("%<font color=#0000ff>0.2f"</font>, $As/$totalACGT);
+$fractC = <font color=#000080 style="font-weight: bold;">sprintf</font>("%<font color=#0000ff>0.2f"</font>, $Cs/$totalACGT);
+$fractG = <font color=#000080 style="font-weight: bold;">sprintf</font>("%<font color=#0000ff>0.2f"</font>, $Gs/$totalACGT);
+$fractT = <font color=#000080 style="font-weight: bold;">sprintf</font>("%<font color=#0000ff>0.2f"</font>, $Ts/$totalACGT);
+
+<font color=#008000 ># Expected hits calculations:</font>
+<font color=#000080 style="font-weight: bold;">my</font> (%expected_hits, %times_expected);
+<font color=#000080 style="font-weight: bold;">my</font> $exp_hits;
+
+<font color=#000080 style="font-weight: bold;">print</font> <font color=#000080 style="font-weight: bold;">STDERR</font> "** Expected hits and observed hits...\n";
+<font color=#000080 style="font-weight: bold;">foreach</font> (<font color=#000080 style="font-weight: bold;">keys</font> %nmers_t) {
+        $exp_hits = expected_hits($_) * $seq_length * <font color=#0000ff>2</font>;
+        <font color=#000080 style="font-weight: bold;">if</font> ($exp_hits &gt; <font color=#0000ff>10000</font>) {
+                $exp_hits = <font color=#000080 style="font-weight: bold;">sprintf</font> ("%<font color=#0000ff>0.1e"</font>, $exp_hits);
+        }
+        <font color=#000080 style="font-weight: bold;">elsif</font> ($exp_hits &lt; <font color=#0000ff>0.1</font>)  {
+                $exp_hits = <font color=#000080 style="font-weight: bold;">sprintf</font> ("%<font color=#0000ff>0.1e"</font>, $exp_hits);
+        }
+        <font color=#000080 style="font-weight: bold;">else</font> {
+                $exp_hits = <font color=#000080 style="font-weight: bold;">sprintf</font> ("%<font color=#0000ff>0.1f"</font>, $exp_hits);
+        }
+        $expected_hits{$_} = $exp_hits;
+
+        $times_expected{$_} = $nmers_t{$_}/$exp_hits;
+        <font color=#000080 style="font-weight: bold;">if</font> ($times_expected{$_} &gt; <font color=#0000ff>10000</font>) {
+                $times_expected{$_} = <font color=#000080 style="font-weight: bold;">sprintf</font> ("%<font color=#0000ff>0.1e"</font>, $times_expected{$_});
+        }
+        <font color=#000080 style="font-weight: bold;">elsif</font> ($times_expected{$_} &lt; <font color=#0000ff>0.1</font>)  {
+                $times_expected{$_} = <font color=#000080 style="font-weight: bold;">sprintf</font> ("%<font color=#0000ff>0.1e"</font>, $times_expected{$_});
+        }
+        <font color=#000080 style="font-weight: bold;">else</font> {
+                $times_expected{$_} = <font color=#000080 style="font-weight: bold;">sprintf</font> ("%<font color=#0000ff>0.1f"</font>, $times_expected{$_});
+        }
+}
+
+<font color=#008000 ># Flags zero hits to report "No hits found":</font>
+<font color=#000080 style="font-weight: bold;">my</font> $count_0 = <font color=#0000ff>0</font>;
+
+<font color=#008000 ># Expected hits are calculated based on the GC content of the</font>
+<font color=#008000 >#   incoming sequence:</font>
+
+<font color=#008000 ># Sort the hash by number of hits:</font>
+<font color=#000080 style="font-weight: bold;">my</font> @sorted_hits;
+<font color=#000080 style="font-weight: bold;">print</font> <font color=#000080 style="font-weight: bold;">STDERR</font> "** Sorting by $sort_key...\n";
+$sort_key <font color=#000080 style="font-weight: bold;">eq</font> "number_of_hits" ?
+        (@sorted_hits = <font color=#000080 style="font-weight: bold;">sort</font> sort_by_number_of_hits(<font color=#000080 style="font-weight: bold;">keys</font> %nmers_t)) :
+        (@sorted_hits = <font color=#000080 style="font-weight: bold;">sort</font> sort_by_most_overrepresented (<font color=#000080 style="font-weight: bold;">keys</font> %nmers_t));
+
+<font color=#008000 ># Select the number of hits desired by the user:</font>
+@sorted_hits = @sorted_hits[<font color=#0000ff>0..</font>($rank_hits-1)];
+
+
+<font color=#008000 ># Output the data:</font>
+<font color=#000080 style="font-weight: bold;">print</font> <font color=#000080 style="font-weight: bold;">STDERR</font> "** Printing...\n";
+<font color=#008000 ># Basic information:</font>
+<font color=#008000 ># Keep the following line, it's used as a regex start point!"</font>
+
+<font color=#000080 style="font-weight: bold;">print</font> wrap '', '', "Sequence: [",
+        (($count &gt; <font color=#0000ff>1</font>) ? "Multiple entries" : $seq_name),"] ($seq_length bp) ",
+        ($circular <font color=#000080 style="font-weight: bold;">eq</font> "yes"? "circular": "linear"), "molecule\n";
+
+<font color=#008000 ># If the incoming sequence has some degenerate bases. Warn user.</font>
+<font color=#000080 style="font-weight: bold;">if</font> ($totalACGT &lt; $seq_length) {
+        <font color=#000080 style="font-weight: bold;">print</font> "The analysed sequence has ", $seq_length-$totalACGT,
+        " degenerate bases.  This may skew the results.\n";
+}
+
+<font color=#000080 style="font-weight: bold;">printf</font> "\nThe top %d %d-mers sorted by %<font color=#000080 style="font-weight: bold;">s</font>:\n",
+        $rank_hits, $nmer_query, $sort_key;
+
+<font color=#000080 style="font-weight: bold;">print</font> "Rank:\tHits:\tExp:\t\tX:\t\tSequence:\n";
+<font color=#000080 style="font-weight: bold;">print</font> "----\t----\t---\t\t-\t\t--------\n";
+
+<font color=#000080 style="font-weight: bold;">foreach</font> (@sorted_hits) {
+        $count_0++;
+        <font color=#000080 style="font-weight: bold;">printf</font> "%d\t%d\t%-8s\t%-8s\t%s\n",
+        $count_0,
+        $nmers_t{$_},
+        <font color=#000080 style="font-weight: bold;">exists</font> $expected_hits{$_} ? $expected_hits{$_}:<font color=#0000ff>0</font>,
+        <font color=#000080 style="font-weight: bold;">exists</font> $times_expected{$_}? $times_expected{$_}:<font color=#0000ff>0</font>,
+        $_;
+} <font color=#008000 ># end of foreach</font>
+
+<font color=#000080 style="font-weight: bold;">print</font> "No hits found\n" <font color=#000080 style="font-weight: bold;">if</font> ($count_0 == <font color=#0000ff>0</font>);
+<font color=#000080 style="font-weight: bold;">print</font> "\n";
+
+<font color=#008000 ># Map the position of each required hit:</font>
+<font color=#000080 style="font-weight: bold;">if</font> ($coords <font color=#000080 style="font-weight: bold;">eq</font> "yes") {
+        <font color=#000080 style="font-weight: bold;">print</font> "Co-ordinates: \n";
+        <font color=#000080 style="font-weight: bold;">foreach</font> (@sorted_hits) {
+                <font color=#000080 style="font-weight: bold;">my</font> @coords;
+<font color=#008000 ># forward strand:</font>
+                <font color=#000080 style="font-weight: bold;">print</font> "$_ (forward_strand): ";
+                <font color=#000080 style="font-weight: bold;">while</font> ($seq_str1 =~ <font color=#000080 style="font-weight: bold;">m</font>/(?=$_)/g) {
+            <font color=#000080 style="font-weight: bold;">push</font> @coords, (<font color=#000080 style="font-weight: bold;">pos</font> $seq_str1) + <font color=#0000ff>1</font>;
+                }
+                <font color=#000080 style="font-weight: bold;">print</font> <font color=#000080 style="font-weight: bold;">scalar</font> @coords, " hits\n";
+                <font color=#000080 style="font-weight: bold;">print</font> wrap ('', '', "@coords\n");
+                <font color=#000080 style="font-weight: bold;">if</font> (<font color=#000080 style="font-weight: bold;">scalar</font> @coords == <font color=#0000ff>0</font>) {
+                        <font color=#000080 style="font-weight: bold;">print</font> "0\n";
+                }
+
+<font color=#008000 ># reverse strand:</font>
+                @coords = ();
+                <font color=#000080 style="font-weight: bold;">print</font> "$_ (reverse_strand): ";
+                <font color=#000080 style="font-weight: bold;">while</font> ($seq_str2 =~ <font color=#000080 style="font-weight: bold;">m</font>/(?=$_)/g) {
+            <font color=#000080 style="font-weight: bold;">push</font> @coords, (<font color=#000080 style="font-weight: bold;">pos</font> $seq_str2) + <font color=#0000ff>1</font>;
+                }
+                <font color=#000080 style="font-weight: bold;">print</font> <font color=#000080 style="font-weight: bold;">scalar</font> @coords, " hits\n";
+                <font color=#000080 style="font-weight: bold;">print</font> wrap ('', '', "@coords\n");
+                <font color=#000080 style="font-weight: bold;">if</font> (<font color=#000080 style="font-weight: bold;">scalar</font> @coords == <font color=#0000ff>0</font>) {
+                        <font color=#000080 style="font-weight: bold;">print</font> "0\n";
+                }
+                <font color=#000080 style="font-weight: bold;">print</font> "\n";
+        }
+}
+
+<font color=#008000 ># Final time stamp:</font>
+<font color=#000080 style="font-weight: bold;">printf</font> <font color=#000080 style="font-weight: bold;">STDERR</font> "** Analysis complete: %d seconds (%<font color=#0000ff>0.2f</font> minutes) elapsed\n",
+        <font color=#000080 style="font-weight: bold;">time</font> - $time_zero, (<font color=#000080 style="font-weight: bold;">time</font> - $time_zero)/<font color=#0000ff>60</font>;
+
+<font color=#008000 >#&lt;--- end of main function</font>
+
+<font color=#000080 style="font-weight: bold;">sub</font> expected_hits {
+<font color=#008000 >## Function: Calculates predicted frequency of a sequence</font>
+<font color=#008000 >#  based on ACGT content</font>
+<font color=#008000 >#  Expects: a string of nucleotides</font>
+<font color=#008000 >#  Returns: an expected value of hits.</font>
+
+        <font color=#000080 style="font-weight: bold;">my</font> $incoming = $_[<font color=#0000ff>0</font>];
+        <font color=#000080 style="font-weight: bold;">my</font> $As = ($incoming =~ <font color=#000080 style="font-weight: bold;">tr</font>/A//);
+        <font color=#000080 style="font-weight: bold;">my</font> $Cs = ($incoming =~ <font color=#000080 style="font-weight: bold;">tr</font>/C//);
+        <font color=#000080 style="font-weight: bold;">my</font> $Gs = ($incoming =~ <font color=#000080 style="font-weight: bold;">tr</font>/G//);
+        <font color=#000080 style="font-weight: bold;">my</font> $Ts = ($incoming =~ <font color=#000080 style="font-weight: bold;">tr</font>/T//);
+
+        <font color=#000080 style="font-weight: bold;">my</font> $outgoing = ($fractA**$As) * ($fractC**$Cs) *
+                ($fractG**$Gs) * ($fractT**$Ts);
+        <font color=#000080 style="font-weight: bold;">return</font> $outgoing;
+}
+
+<font color=#000080 style="font-weight: bold;">sub</font> sort_by_number_of_hits {
+        $nmers_t{$b} &lt;=&gt; $nmers_t{$a}
+        or $a <font color=#000080 style="font-weight: bold;">cmp</font> $b;
+}
+
+<font color=#000080 style="font-weight: bold;">sub</font> sort_by_most_overrepresented {
+        $times_expected{$b} &lt;=&gt; $times_expected{$a}
+        or $a <font color=#000080 style="font-weight: bold;">cmp</font> $b;
+}
+
+<font color=#000080 style="font-weight: bold;">sub</font> process_command_line {
+<font color=#008000 ># Variables:</font>
+        <font color=#000080 style="font-weight: bold;">my</font> %opts = ();    <font color=#008000 ># command line params, as entered by user</font>
+        <font color=#000080 style="font-weight: bold;">my</font> @cmd_line;     <font color=#008000 ># returned value</font>
+        <font color=#000080 style="font-weight: bold;">my</font> @list;         <font color=#008000 ># %opts as an array for handling</font>
+        <font color=#000080 style="font-weight: bold;">my</font> $cmd_args;            <font color=#008000 ># return value for getopts()</font>
+        <font color=#000080 style="font-weight: bold;">my</font> $item;
+
+<font color=#008000 ># Holders for command line's files:</font>
+        <font color=#000080 style="font-weight: bold;">my</font> $nmer_query = <font color=#0000ff>9</font>;
+        <font color=#000080 style="font-weight: bold;">my</font> $rank_hits = <font color=#0000ff>20</font>;
+        <font color=#000080 style="font-weight: bold;">my</font> $sort_key = "most_overrepresented";
+        <font color=#000080 style="font-weight: bold;">my</font> $coords = "no";
+        <font color=#000080 style="font-weight: bold;">my</font> $circular = "yes";
+
+<font color=#008000 ># Get the command=line parameters:</font>
+        <font color=#000080 style="font-weight: bold;">use</font> vars <font color=#000080 style="font-weight: bold;">qw</font>($opt_n $opt_r $opt_S $opt_O $opt_L $opt_h);
+        <font color=#000080 style="font-weight: bold;">use</font> Getopt::Std;
+        $cmd_args = getopts('n:r:SOLh', \%opts);
+
+<font color=#008000 ># Die on illegal argument list:</font>
+        <font color=#000080 style="font-weight: bold;">if</font> ($cmd_args == <font color=#0000ff>0</font>) {
+                <font color=#000080 style="font-weight: bold;">die</font> ("Error: Missing or incorrect command line parameter(<font color=#000080 style="font-weight: bold;">s</font>)!\n",
+                                 $error_msg, "\n");
+        }
+
+<font color=#008000 ># Make the hashes into an array:</font>
+  @list = <font color=#000080 style="font-weight: bold;">keys</font> %opts;
+
+<font color=#008000 ># Do a quick check for "help" and the compulsory parameters:</font>
+<font color=#008000 >#   If the compulsory files are not there, squawk and die:</font>
+        <font color=#000080 style="font-weight: bold;">foreach</font> $item (@list)  {
+<font color=#008000 ># Help:</font>
+                <font color=#000080 style="font-weight: bold;">if</font> ($item <font color=#000080 style="font-weight: bold;">eq</font> "h")  {
+            help();
+                }
+<font color=#008000 ># nmer_query:</font>
+                <font color=#000080 style="font-weight: bold;">elsif</font> ($item <font color=#000080 style="font-weight: bold;">eq</font> "n") {
+            $nmer_query = $opts{$item};
+                }
+<font color=#008000 ># rank_hits:</font>
+                <font color=#000080 style="font-weight: bold;">elsif</font> ($item <font color=#000080 style="font-weight: bold;">eq</font> "r") {
+            $rank_hits = $opts{$item};
+                }
+<font color=#008000 ># sort_key</font>
+                <font color=#000080 style="font-weight: bold;">elsif</font> ($item <font color=#000080 style="font-weight: bold;">eq</font> "S") {
+            $sort_key = "number_of_hits";
+                }
+<font color=#008000 ># coords:</font>
+                <font color=#000080 style="font-weight: bold;">elsif</font> ($item <font color=#000080 style="font-weight: bold;">eq</font> "O") {
+            $coords = "yes";
+                }
+<font color=#008000 ># circular:</font>
+                <font color=#000080 style="font-weight: bold;">elsif</font> ($item <font color=#000080 style="font-weight: bold;">eq</font> "L") {
+            $circular = "no";
+                }
+        }
+
+<font color=#008000 ># Put it in an array:</font>
+        @cmd_line = ($nmer_query, $rank_hits, $sort_key, $coords, $circular);
+        <font color=#000080 style="font-weight: bold;">return</font> @cmd_line;
+
+} <font color=#008000 >#end of sub process_command_line()</font>
+
+<font color=#000080 style="font-weight: bold;">sub</font> help {
+
+<font color=#000080 style="font-weight: bold;">print</font> &lt;&lt;EOHelp;
+
+Function:  Searches <font color=#000080 style="font-weight: bold;">for</font> oligonucleotides which are over-represented in a
+   genomic sequence.  These could be \"DNA uptake sequences\" or other
+   repeats.  N-mers of any size can be searched and the results can be
+   sorted by number of hits or by over-representation.  Over-representation
+   is calculated by dividing the number of observed Hits by the
+   expected abundance (taking %GC into account).
+
+   The results will be in "pairs" of complementary sequences because
+   both DNA strands will be searched.  Co-ordinates are not really <font color=#000080 style="font-weight: bold;">for</font> human
+   eyes to look at - rather, they should be passed on to other computer
+   programs, or even Excel, <font color=#000080 style="font-weight: bold;">for</font> further analysis.  Co-ordinates are based upon
+   the relevant strand (i.e. co-ordinate <font color=#0000ff>2</font> from the <font color=#000080 style="font-weight: bold;">reverse</font> strand is the
+   <font color=#000080 style="font-weight: bold;">reverse</font> complement of the second <font color=#000080 style="font-weight: bold;">last</font> base of the forward strand).
+
+Syntax:  $title -nX -rX -L -O -<font color=#000080 style="font-weight: bold;">S</font> fasta.file
+   or    $title -h <font color=#000080 style="font-weight: bold;">for</font> help
+
+Command-line parameters:
+   -nX where X is the number or Nmers to be searched (default: <font color=#0000ff>9</font>)
+   -rX where X is the number of best hits to be returned (default: <font color=#0000ff>20</font>)
+
+Command-line toggles:
+   -L switches Linear sequence ON (default: assumes circular sequence)
+   -O toggles display co-Ordinates (default: don\'t display co-ordinates)
+   -<font color=#000080 style="font-weight: bold;">S</font> toggles <font color=#000080 style="font-weight: bold;">Sort</font> by number of hits (default: <font color=#000080 style="font-weight: bold;">sort</font> by over-representation)
+
+Examples:
+   \"$title -n9 -r22 -LOS &lt; fasta_file\"
+   will search \"fasta_file\", as a linear sequence, <font color=#000080 style="font-weight: bold;">for</font> <font color=#0000ff>9-mers</font>, and display
+   the best <font color=#0000ff>20</font> hits (and their co-ordinates), sorted by number of hits.
+
+Warning:  <font color=#000080 style="font-weight: bold;">No</font> attempt is made to ensure that the input file is a valid
+   FASTA file.  The program will accept a FASTA file containing multiple
+   sequences, but it assumes that they are from the same project and
+   concatenates them (with delimiters to keep them apart) <font color=#000080 style="font-weight: bold;">for</font> the repeat
+   analysis, and reports on the total set.
+
+\"$title\" will work as a <font color=#000080 style="font-weight: bold;">pipe</font>, i.e. will accept a redirected FASTA file,
+   and output can be redirected to a file.  The \"status comments\"
+   (starting with **) are sent to the computer screen and will not be
+   redirected to the file.
+
+Warning: $title is a serious memory hog, and should not be considered
+   <font color=#000080 style="font-weight: bold;">for</font> searching <font color=#000080 style="font-weight: bold;">for</font> repeats of greater than <font color=#0000ff>12</font> mers without at least
+   one megabtye of RAM, and preferable <font color=#0000ff>4</font>!!!
+
+<font color=#000080 style="font-weight: bold;">If</font> this scrolls by too fast type: \"$title \| more\".
+EOHelp
+<font color=#000080 style="font-weight: bold;">die</font> ("\n");
+} <font color=#008000 ># end of sub help</font>
+</pre>
+
+Download this Perl script as a file from <a href="dateien/repeat_finder.pl.txt">here</a>.
+  
+  
+    <!--INC:"heimatlink.inc"-->
+    <!-- ******************* Heimat Link *********************** -->
+    <hr size="6" width="99%" align="center">
+    <center>
+      <a href="heimat.ssi.shtml"><img src="bilder/homejump.gif" width="40" height="40"
+      alt="Heimat">
+      <br>
+       Home</a>
+    </center>
+    <!-- ******************* Heimat Link - Ende*********************** -->
+    <!--/INC:"heimatlink.inc"-->
+  </body>
+</html>

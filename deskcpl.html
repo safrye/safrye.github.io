@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 //EN">
+<html>
+  <head>
+    <title>
+      Titel
+    </title>
+    <meta name="author" content="Dr. Stephan Frye">
+    <meta name="description" content="">
+    <meta name="generator" content="HTML Studio">
+    <meta name="page-type" content="Private Homepage">
+    <meta name="keywords" content=
+    "Display properties panel, Control Panel, Problem, crash, registry">
+    <meta name="audience" content="Alle">
+    <meta name="expires" content="NEVER">
+    <meta name="language" content="en">
+    <link type="text/css" rel="stylesheet" href="stil-grau.css">
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+  </head>
+  <body>
+    <h2>
+      Display Properties Panel crashes / will not come up when you right click on the
+      desktop and select "Properties"
+    </h2>
+    <p>
+      For me the problem with the display properties panel started after I installed
+      newest NVidia driver I downloaded from www.guru3d.com. In addition I used
+      Powerstrip from EnTech and nVHardPageSE form guru3D. I don't know if any of this
+      programs caused the problem because I allways do a lot of installs (and uninstalls)
+      of freeware from the net, so I don't want to blame anyone.
+    </p>
+    <p>
+      A general problem solution for a similar problem you can find "en mass" on the net
+      is, that you have to remove the protection from the Control panel. You can do that
+      with tools like X-Setup or the "Registry System Wizard" but you can also look at
+    </p>
+<pre>
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System
+</pre>
+    <p>
+      and
+    </p>
+<pre>
+    HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\currentversion\policies\system
+</pre>
+    <p>
+      and remove the following keys or set them to 0
+    </p>
+<pre>
+NoDispCPL
+NoDispBackgroundPage
+NoDispScrSavPage
+NoDispAppearancePage
+NoDispSettingsPage
+</pre>
+    <p>
+      NoDispCPL - Disable Display Control Panel. If the value is set to 1, the Display
+      Properties property sheet is not accessible.
+      <br>
+       NoDispBackgroundPage - Hide Background Page. If the value is set to 1, the
+      Background property page on the Display Properties property sheet is hidden.
+      <br>
+       NoDispScrSavPage - Hide Screen Saver Page. If the value is set to 1, the Screen
+      Saver property page on the Display Properties property sheet is hidden.
+      <br>
+       NoDispAppearancePage - Hide Appearance Page. If the value is set to 1, the
+      Appearance property page on the Display Properties property sheet is hidden.
+      <br>
+       NoDispSettingsPage - Hide Settings Page. If the value is set to 1, the Settings
+      property page on the Display Properties property sheet is hidden.
+    </p>
+    <!--INC:"heimatlink.inc"-->
+    <p>
+      Unfortunately this fix didn't apply to my problem. Also a tool from Entech (<a
+      href="http://www.entechtaiwan.net/util/legacy.shtm" target="_blank">DPSclean</a>)
+      didn't show anything I could fix with it. What I did in the end was to compare the
+      registries of my machine with one that didn't show the problem. I focused on the
+      keys on the same <a href=
+      "http://forums.guru3d.com/showthread.php?s=6cd325899a644b3f487c509f5146edb2&amp;threadid=46342&amp;goto=nextoldest"
+       target="_blank">branch as suggested in the guru3d forum</a> even as the fix
+      suggested there didn't help me. In the end I found the culprit!
+    </p>
+<pre>
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\Desk\shellex\PropertySheetHandlers\MSICPL]
+@="{414485B5-F273-45e6-A5E5-AF5F4BEDE538}"
+</pre>
+    <p>
+      Just delete the MSICPL key and you are done!
+      <br>
+      Don't ask me where this key comes from. You may do a <a href=
+      "http://www.google.com/search?hs=m5P&amp;hl=en&amp;lr=&amp;client=opera&amp;rls=de&amp;q=SOFTWARE+Microsoft+Windows+CurrentVersion%5CControls+Folder%5CDesk+shellex+PropertySheetHandlers+%2BMSICPL&amp;btnG=Search"
+       target="_blank">google search on it</a>. :))
+    </p>
+    <!-- ******************* Heimat Link *********************** -->
+    <hr size="6" width="99%" align="center">
+    <center>
+      <a href="heimat.ssi.shtml"><img src="bilder/homejump.gif" width="40" height="40"
+      alt="Heimat">
+      <br>
+       Home</a>
+    </center>
+    <!-- ******************* Heimat Link - Ende*********************** -->
+    <!--/INC:"heimatlink.inc"-->
+  </body>
+</html>

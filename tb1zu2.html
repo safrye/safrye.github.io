@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 //EN">
+<html>
+  <head>
+    <title>
+      Titel
+    </title>
+    <meta name="author" content="Dr. Stephan Frye">
+    <meta name="description" content="">
+    <meta name="generator" content="HTML Studio">
+    <link type="text/css" rel="stylesheet" href="stil-grau.css">
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+  </head>
+  <body>
+  
+  
+  <h2>Fehler beim aufgradieren von Mozilla Thunderbird Version 1.5.0.12 auf Version
+   2.0.0.4 (deutsch)</h2>
+<h4>   Problem:</h4><p> Nach der Installation der neuen Version 2 (deutsch) &uuml;ber die alte Version 1 kommt die Fehlermeldung:
+   <br>
+<font  color="#FF0000">   XML-Verarbeitungsfehler:Undefinierte Entit&auml;t..Adresse : chrome/messenger/content/messenger.xul.Zeile Nr.293,Spalte16:&lt;treecoid....+fixed true...+cycler true....</font>
+<br>
+
+<p>Den gleichen Fehler habe ich zwar <a href="http://www.thunderbird-mail.de/forum/viewtopic.php?p=148291" target="_blank">hier</a> gefunden, aber keine L&ouml;sung.</p>
+<h4>Fehlersuche und -behebung:</h4>  <br>
+<li>Start von TB im <a href="http://www.thunderbird-mail.de/wiki/Safe-Mode" target="_blank">Safe-Mode</a> funktioniert.</li>
+
+<ol><li>Suche nach dem angegebenen Text mit AgentRansack in den Verzeichnissen %appdata%\Thunderbird und im Thunderbird
+Programmverzeichnis. Mehrere Dateien werden gefunden. Der Fehler liegt anscheinend in der Datei messenger.jar im
+Programmunterverzeichnis \chrome.</li>
+
+<li>L&ouml;schen der Datei messenger.jar bewirkt, da&szlig; sich TB nicht mehr starten l&auml;&szlig;t.</li>
+<li>Vollst&auml;ndiges L&ouml;schen aller Dateien im TB Programmverzeichnis und neue Installation der US Version 2.0.0.4.</li>
+<li>TB startet, aber im untersten Bereich steht die Fehlermeldung <font color="#FF0000">&lt;menuitem</font>.</li>
+<li>Deinstallieren aller inkompatiblen Erweiterungen. Nach der Deinstallation von <a href="https://addons.mozilla.org/de/thunderbird/addon/106" target="_blank">Buttons!</a> ist die
+Fehlermeldung am unteren Teil verschwunden. Installationd er neuen Version Buttons! 0.5.3.2, die nicht durch den automatischen
+ Update-Dienst bei der Neuinstallation installiert wurde. </li>
+ <li>Installation der deutsche Oberfl&auml;che <a href="http://releases.mozilla.org/pub/mozilla.org/thunderbird/releases/2.0.0.4/win32/xpi/" target="_blank">de.xpi</a> und Wechsel auf Deutsch mit
+<a href="http://www.erweiterungen.de/detail/Locale_Switcher/" target="_blank">Locale Switcher [de]</a>.
+ </li>
+ <li>Installation einer neuen Version von <a href="http://jslib.mozdev.org/installation.html" target="_blank">jsLib lite</a>, die
+  auch nicht automatisch installiert wurde.</li>
+  <li>Installation neuer <a href="http://www.thunderbird-mail.de/wiki/W&ouml;rterb&uuml;cher" target="_blank">W&ouml;rterb&uuml;cher</a>.</li>
+  <li>Installation von <a href="http://mailtagger.mozdev.org/" target="_blank">MailTagger</a>. Die neueste Version ist auch nicht automatisch installiert worden.</li>
+  <li><a href="https://addons.mozilla.org/de/thunderbird/addon/383" target="_blank">Auto Copy</a> 0.6.4 funktioniert in TB 2. Zur Installation mu&szlig; <a href="https://addons.mozilla.org/de/thunderbird/addon/421" target="_blank">MR Tech Local Install</a>
+  installiert sein und bei der Installation von Auto Copy 0.6.4 der Kasten "Den Kompatibilit&auml;tstest ('maxVersion') deaktivieren" abgehakt werden.</li>
+<li>Installation der neuesten Version von <a href="http://www.erweiterungen.de/detail/Enigmail/" target="_blank">Enigmail</a>.</li>
+<li>Und zum Schlu&szlig; die Kompression von thunderbird.exe mit <a href="http://upx.sourceforge.net/" target="_blank">UPX</a> 3.00 auf unter 40% der Originalgr&ouml;&szlig;e. Als Oberfl&auml;che f&uuml;r UPX benutze ich <a href="http://www.paehl.de/german.php#upx" target="_blank">UPX Graphical</a> mit den Einstellungen wie hier gezeigt.
+                          Die Datei upx.exe mu&szlig; daf&uuml;r im Programmverzeichnis von UPX Graphical vorliegen!
+<br><img src="bilder/upxg1.png"><img src="bilder/upxg2.png"> </li>
+
+
+
+</ol>
+   </p>
+  
+    <!--INC:"heimatlink.inc"-->
+    <!-- ******************* Heimat Link *********************** -->
+    <hr size="6" width="99%" align="center">
+    <center>
+      <a href="heimat.ssi.shtml"><img src="bilder/homejump.gif" width="40" height="40"
+      alt="Heimat">
+      <br>
+       Home</a>
+    </center>
+    <!-- ******************* Heimat Link - Ende*********************** -->
+    <!--/INC:"heimatlink.inc"-->
+  </body>
+</html>

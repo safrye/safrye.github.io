@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 //EN">
+<html>
+  <head>
+    <title>
+      Titel
+    </title>
+    <meta name="author" content="Dr. Stephan Frye">
+    <meta name="description" content="">
+    <meta name="generator" content="HTML Studio">
+    <link type="text/css" rel="stylesheet" href="stil-grau.css">
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+  </head>
+  <body>
+  
+   <pre><font color=#ff0033 >@echo</font> <font color=#ff0033 >off</font>
+<font color=#ff0000 style="font-weight: bold; ">:</font><font color=#ff0000 style="font-weight: bold; ">:</font> repeat_finder starten mit Angabe der Xmere und der FASTA-Sequenz
+<font color=#ff0000 style="font-weight: bold; ">:</font><font color=#ff0000 style="font-weight: bold; ">:</font> Syntax<font color=#ff0000 style="font-weight: bold; ">:</font> rfinder.bat [FASTA-Datei] [Zahl(Min-Xmer)] [Zahl(Max-Xmer)]
+
+title Repeat-finder Batch
+<font color=#ff0000 style="font-weight: bold; ">:</font><font color=#ff0000 style="font-weight: bold; ">:</font>Variablen setzen
+<font color=#ff0033 >set</font> _arbeitsweg_=c<font color=#ff0000 style="font-weight: bold; ">:</font>\Dienst\bin
+<font color=#ff0033 >set</font> msgbox=%_arbeitsweg_%\msgbox.exe
+if not exist %msgbox% goto kein_msgbox
+<font color=#ff0033 >set</font> wprompt=%_arbeitsweg_%\wprompt.exe
+<font color=#ff0033 >set</font> winput=%_arbeitsweg_%\winput.exe
+<font color=#ff0000 style="font-weight: bold; ">:</font><font color=#ff0000 style="font-weight: bold; ">:</font><font color=#ff0033 >set</font> rfinder=D<font color=#ff0000 style="font-weight: bold; ">:</font>\Data\Perl\NRC_Institute_for_Biological_Sciences\repeat_finder\repeat_finder.pl
+<font color=#ff0033 >set</font> rfinder=C<font color=#ff0000 style="font-weight: bold; ">:</font>\Dienst\perl\repeat_finder\repeat_finder.pl
+
+if "%<font color=#0000ff style="font-weight: bold;">1"</font>=="" goto datei-fehler
+
+%msgbox% "The FASTA sequence file must be clean!" "Warning" <font color=#0000ff style="font-weight: bold;">2</font> <font color=#0000ff style="font-weight: bold;">2</font> <font color=#0000ff style="font-weight: bold;">8</font>
+if %errorlevel% == <font color=#0000ff style="font-weight: bold;">2</font> goto Ende
+
+<font color=#ff0033 >set</font> weg=%~dp1
+<font color=#ff0033 >set</font> min=%<font color=#0000ff style="font-weight: bold;">2</font>
+<font color=#ff0033 >set</font> max=%<font color=#0000ff style="font-weight: bold;">3</font>
+<font color=#ff0000 style="font-weight: bold; ">:</font>min
+if "%min%"=="" <font color=#ff0033 >call</font> <font color=#ff0000 style="font-weight: bold; ">:</font>min-eingabe
+if "%min%"=="" goto min
+<font color=#ff0000 style="font-weight: bold; ">:</font>max
+if "%max%"=="" <font color=#ff0033 >call</font> <font color=#ff0000 style="font-weight: bold; ">:</font>max-eingabe
+if "%max%"=="" goto max
+<font color=#ff0033 >echo</font> FASTA-Datei<font color=#ff0000 style="font-weight: bold; ">:</font> %<font color=#0000ff style="font-weight: bold;">1</font>
+<font color=#ff0033 >echo</font> Min-Xmer<font color=#ff0000 style="font-weight: bold; ">:</font> %min%
+<font color=#ff0033 >echo</font> Max-Xmer<font color=#ff0000 style="font-weight: bold; ">:</font> %max%
+<font color=#ff0033 >start</font> "MsbBox" /b %msgbox% "Min=%min% bp Max=%max% bp Repeats in der Datei %<font color=#0000ff style="font-weight: bold;">1"</font> "Eingabe" <font color=#0000ff style="font-weight: bold;">1</font> <font color=#0000ff style="font-weight: bold;">1</font>
+
+<font color=#ff0033 >for</font> /L %%x in (%min%,+1,%max%) <font color=#ff0033 >do</font> <font color=#ff0033 >call</font> <font color=#ff0000 style="font-weight: bold; ">:</font>rf-<font color=#ff0033 >start</font> %%x %%<font color=#0000ff style="font-weight: bold;">1</font> %weg%
+goto Ende
+
+
+<font color=#ff0000 style="font-weight: bold; ">:</font>Ende
+goto<font color=#ff0000 style="font-weight: bold; ">:</font>eof
+
+<font color=#ff0000 style="font-weight: bold; ">:</font><font color=#ff0000 style="font-weight: bold; ">:</font> Unterprogramme
+<font color=#ff0000 style="font-weight: bold; ">:</font>rf-<font color=#ff0033 >start</font>
+<font color=#ff0033 >echo</font>.
+<font color=#ff0033 >echo</font> --------------------------------------------------
+<font color=#ff0033 >echo</font> %<font color=#0000ff style="font-weight: bold;">1-mer</font><font color=#ff0000 style="font-weight: bold; ">:</font>
+%rfinder% -n%<font color=#0000ff style="font-weight: bold;">1</font> "%<font color=#0000ff style="font-weight: bold;">2"</font> &gt;&gt; "%<font color=#0000ff style="font-weight: bold;">3</font>%~n2.rfXmer"
+goto<font color=#ff0000 style="font-weight: bold; ">:</font>eof
+
+<font color=#ff0000 style="font-weight: bold; ">:</font>min-eingabe
+%winput% "set min=$input" "Minimale Repeatlaenge (bp)" /num &gt; %tmp%\temp.bat
+if not errorlevel <font color=#0000ff style="font-weight: bold;">1</font> <font color=#ff0033 >call</font> %tmp%\temp.bat
+goto<font color=#ff0000 style="font-weight: bold; ">:</font>eof
+
+<font color=#ff0000 style="font-weight: bold; ">:</font>max-eingabe
+%winput% "set max=$input" "Maximale Repeatlaenge (bp)" /num &gt; %tmp%\temp.bat
+if not errorlevel <font color=#0000ff style="font-weight: bold;">1</font> <font color=#ff0033 >call</font> %tmp%\temp.bat
+goto<font color=#ff0000 style="font-weight: bold; ">:</font>eof
+
+<font color=#ff0000 style="font-weight: bold; ">:</font>datei-fehler
+<font color=#ff0033 >echo</font> Dateiname fehlt!
+<font color=#ff0033 >echo</font> Syntax<font color=#ff0000 style="font-weight: bold; ">:</font> rfinder.bat [FASTA-Datei] [Zahl(Min-Xmer)] [Zahl(Max-Xmer)]
+<font color=#ff0033 >start</font> "MsbBox" /b %msgbox% "Syntax<font color=#ff0000 style="font-weight: bold; ">:</font> rfinder.bat [FASTA-Datei] [Zahl(Min-Xmer)] [Zahl(Max-Xmer)]" "Dateiname fehlt" <font color=#0000ff style="font-weight: bold;">2</font> <font color=#0000ff style="font-weight: bold;">1</font>
+goto Ende</pre>
+  
+  
+    <!--INC:"heimatlink.inc"-->
+    <!-- ******************* Heimat Link *********************** -->
+    <hr size="6" width="99%" align="center">
+    <center>
+      <a href="heimat.ssi.shtml"><img src="bilder/homejump.gif" width="40" height="40"
+      alt="Heimat">
+      <br>
+       Home</a>
+    </center>
+    <!-- ******************* Heimat Link - Ende*********************** -->
+    <!--/INC:"heimatlink.inc"-->
+  </body>
+</html>

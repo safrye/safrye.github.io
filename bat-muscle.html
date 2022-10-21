@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta name="generator" content=
+    "HTML Tidy for Windows (vers 25 January 2008), see www.w3.org">
+    <title>
+      Titel
+    </title>
+    <meta name="author" content="Dr. Stephan Frye">
+    <meta name="description" content="">
+    <meta name="generator" content="HTML Studio">
+    <link type="text/css" rel="stylesheet" href="stil-grau.css">
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+  </head>
+  <body>
+    <pre>
+<font color="#FF0033">@echo</font> <font color="#FF0033">off</font>
+title muscle
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> muscle.bat
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Version <font color="#0000FF" style="font-weight:
+bold;">0.02</font> <font color="#0000FF" style="font-weight: bold;">2007-04-13</font>
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Version <font color="#0000FF" style="font-weight:
+bold;">0.01</font> <font color="#0000FF" style="font-weight: bold;">2007-03-19</font>
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> (c) Stephan Alfons Frye
+
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Batchdatei zum starten eines Sequenzabgleichs mit MUSCLE
+
+<font color="#FF0033">set</font> muscleweg="C<font color="#FF0000" style="font-weight: 
+ bold;">:</font>\Program Files\muscle\muscle.exe"
+<font color="#FF0033">set</font> msgboxweg="D<font color="#FF0000" style="font-weight: 
+ bold;">:</font>\Data\Dienst\bin\msgbox.exe"
+<font color="#FF0033">set</font> genedocweg="C<font color="#FF0000" style="font-weight: 
+ bold;">:</font>\Program Files\GENEDOC\GENEDOC.EXE"
+if "%<font color="#0000FF" style="font-weight: bold;">1</font>%"=="" goto keine_eingabe
+<font color="#FF0033">set</font> seqdatei=%<font color="#0000FF" style="font-weight:
+bold;">1</font>
+
+<font color="#FF0033">echo</font> Sequenzdatei f&uuml;r den Abgleich<font color="#FF0000"
+style="font-weight: bold;">:</font> %seqdatei%
+if not exist %seqdatei% goto datei_fehlt
+
+%msgboxweg% "Soll die Datei "%seqdatei%" mit MUSCLE abgeglichen werden?" "MUSCLE Abgleich" <font color="#0000FF"
+style="font-weight: bold;">3</font> <font color="#0000FF" style="font-weight:
+bold;">3</font>
+if %errorlevel%==<font color="#0000FF" style="font-weight:
+bold;">7</font> goto kein_abgleich
+if %errorlevel%==<font color="#0000FF" style="font-weight: bold;">6</font> goto ausdatei
+
+<font color="#FF0000" style="font-weight: bold;">:</font>ausdatei
+if exist %seqdatei%_muscle.msf goto datei_schon_da
+<font color="#FF0000" style="font-weight: bold;">:</font>version
+%muscleweg% -version &gt; %tmp%\muscle-version.txt
+%msgboxweg% @%tmp%\muscle-version.txt "Muscle Version" <font color="#0000FF" style= 
+"font-weight: bold;">1</font> <font color="#0000FF" style="font-weight:
+bold;">1</font> <font color="#0000FF" style="font-weight: bold;">6</font>
+del %tmp%\muscle-version.txt
+<font color="#FF0000" style="font-weight: bold;">:</font>abgleich
+%muscleweg% -in %seqdatei% -out %seqdatei%_muscle.msf -msf
+if not exist %seqdatei%_muscle.msf goto fehler
+if exist %seqdatei%_muscle.msf goto fertig
+
+<font color="#FF0000" style="font-weight: bold;">:</font>fertig
+%msgboxweg% "Die Datei "%seqdatei%_muscle.msf" wurde erstellt! Information zum Ableich ist im Programfenster sichtbar!" "Fertig!" <font color="#0000FF"
+style="font-weight: bold;">2</font> <font color="#0000FF" style="font-weight:
+bold;">1</font>
+%msgboxweg% "Soll die erzeugte Datei "%seqdatei%_muscle.msf" mit GeneDoc aufgerufen werden?" "Datei aufrufen?" <font color="#0000FF"
+style="font-weight: bold;">3</font> <font color="#0000FF" style="font-weight:
+bold;">3</font>
+if %errorlevel%==<font color="#0000FF" style="font-weight: bold;">7</font> goto Ende
+if %errorlevel%==<font color="#0000FF" style="font-weight: bold;">6</font> <font color= 
+"#FF0033">start</font> %genedocweg% %seqdatei%_muscle.msf
+goto Ende
+
+<font color="#FF0000" style="font-weight: bold;">:</font>fehler
+%msgboxweg% "Die "Datei %seqdatei%_muscle.msf" wurde NICHT erstellt!" "Fehler!" <font color="#0000FF"
+style="font-weight: bold;">2</font> <font color="#0000FF" style="font-weight:
+bold;">1</font>
+goto Ende
+
+<font color="#FF0000" style="font-weight: bold;">:</font>kein_abgleich
+<font color="#FF0033">echo</font> Es wurde kein Abgleich erstellt!
+goto Ende
+
+<font color="#FF0000" style="font-weight: bold;">:</font>datei_fehlt
+%msgboxweg% "Es wurde keine Datei f&uuml;r den Abgleich angegeben!" "Keine Datei!" <font color="#0000FF"
+style="font-weight: bold;">2</font> <font color="#0000FF" style="font-weight:
+bold;">1</font>
+goto Ende
+
+<font color="#FF0000" style="font-weight: bold;">:</font>datei_schon_da
+%msgboxweg% "Die Ausgabedatei "%seqdatei%_muscle.msf" existiert schon! Soll diese Datei &uuml;berschrieben werden?" "Datei schon vorhanden!" <font color="#0000FF"
+style="font-weight: bold;">2</font> <font color="#0000FF" style="font-weight:
+bold;">3</font>
+if %errorlevel%==<font color="#0000FF" style="font-weight:
+bold;">7</font> goto kein_abgleich
+if %errorlevel%==<font color="#0000FF" style="font-weight: bold;">6</font> goto version
+
+<font color="#FF0000" style="font-weight: bold;">:</font>keine_eingabe
+%msgboxweg% "Die Batch-Datei erwartet einen Dateinamen als Parameter!" "Fehler!" <font color="#0000FF"
+style="font-weight: bold;">2</font> <font color="#0000FF" style="font-weight:
+bold;">1</font>
+
+<font color="#FF0000" style="font-weight: bold;">:</font>Ende
+<font color="#FF0033">set</font> muscleweg=
+<font color="#FF0033">set</font> msgboxweg=
+<font color="#FF0033">set</font> seqdatei=
+goto<font color="#FF0000" style="font-weight: bold;">:</font>eof
+</pre><!--INC:"heimatlink.inc"-->
+    <!-- ******************* Heimat Link *********************** -->
+    <hr size="6" width="99%" align="center">
+    <center>
+      <a href="heimat.ssi.shtml"><img src="bilder/homejump.gif" width="40" height="40"
+      alt="Heimat">
+      <br>
+      Home</a>
+    </center><!-- ******************* Heimat Link - Ende*********************** -->
+    <!--/INC:"heimatlink.inc"-->
+  </body>
+</html>

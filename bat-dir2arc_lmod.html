@@ -1,0 +1,303 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta name="generator" content=
+    "HTML Tidy for Windows (vers 25 January 2008), see www.w3.org">
+    <title>
+      Titel
+    </title>
+    <meta name="author" content="Dr. Stephan Frye">
+    <meta name="description" content="">
+    <meta name="generator" content="HTML Studio">
+    <link type="text/css" rel="stylesheet" href="stil-grau.css">
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+  </head>
+  <body>
+    <pre>
+<font color="#FF0033">@echo</font> <font color="#FF0033">off</font>
+Title dir2arc-lmod - Batch-Skript
+rem *********************************************************
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> dir2arc - Unterverzeichnisse in einzelne Archive verpacken
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Stephan Frye - <font color="#0000FF" style="font-weight: 
+ bold;">17.09.2005</font> Version <font color="#0000FF" style="font-weight:
+bold;">0.01</font> alpha
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> <font color="#0000FF" style="font-weight:
+bold;">25.09.2005</font> Version <font color="#0000FF" style="font-weight:
+bold;">0.02</font> alpha
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> <font color="#0000FF" style="font-weight:
+bold;">14.10.2005</font> Version <font color="#0000FF" style="font-weight:
+bold;">0.03</font> alpha
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> <font color="#0000FF" style="font-weight:
+bold;">24.03.2007</font> Version <font color="#0000FF" style="font-weight:
+bold;">0.06</font> alpha
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> <font color="#0000FF" style="font-weight:
+bold;">01.04.2007</font> Version <font color="#0000FF" style="font-weight:
+bold;">0.07</font> alpha
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> <font color="#0000FF" style="font-weight:
+bold;">05.04.2007</font> Version <font color="#0000FF" style="font-weight:
+bold;">0.08</font> alpha
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight:
+bold;">:</font> Verwendung der subst Routine im Versuch Problemen mit "out of memory" von lmod zu umgehen
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> "PRB<font color="#FF0000" style="font-weight:
+bold;">:</font> Executing a <font color="#0000FF" style="font-weight:
+bold;">16-Bit</font> Process with a Large Command Line on Windows NT/<font color=
+"#0000FF" style="font-weight: bold;">2000</font>/XP" (http<font color="#FF0000" style= 
+"font-weight: bold;">:</font>//support.microsoft.com/kb/<font color="#0000FF" style= 
+"font-weight: bold;">198429</font>/en-us)
+rem *********************************************************
+
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Setzen der Variablen und der Verzeichnisse
+<font color="#FF0033">set</font> arjdir=d<font color="#FF0000" style="font-weight:
+bold;">:</font>\data\dienst\arj
+<font color="#FF0033">set</font> tempdir=%tmp%\dir2arc
+<font color="#FF0033">set</font> mboxweg="D<font color="#FF0000" style="font-weight:
+bold;">:</font>\data\Dienst\bin\msgbox.exe"
+if exist %rdtmp% <font color="#FF0033">set</font> tempdir=%rdtmp%\dir2arc
+<font color="#FF0033">set</font> arbdir=d<font color="#FF0000" style="font-weight:
+bold;">:</font>\data\dienst\dir2arc
+
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Arbeitsverzeichnis erstellen
+if not exist %tempdir% md %tempdir%
+
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> auf vorhandene Eingabe testen
+if "%<font color="#0000FF" style="font-weight: bold;">1</font>%"=="" goto eingabe_fehlt
+if not exist "%<font color="#0000FF" style="font-weight:
+bold;">1</font>%" goto eingabe_fehlt
+<font color="#FF0033">echo</font> Ausgew&bdquo;hltes Verzeichnis<font color="#FF0000"
+style="font-weight: bold;">:</font> %<font color="#0000FF" style="font-weight:
+bold;">1</font>
+
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Unterverzeichnise auflisten
+<font color="#FF0033">echo</font> ------------------------------
+<font color="#FF0033">echo</font> Vorhandene Unterverzeichnisse<font color="#FF0000"
+style="font-weight: bold;">:</font>
+dir /ad /b /o<font color="#FF0000" style="font-weight: bold;">:</font>d %<font color= 
+"#0000FF" style="font-weight: bold;">1\</font>*.*
+dir /ad /b /o<font color="#FF0000" style="font-weight: bold;">:</font>d %<font color= 
+"#0000FF" style="font-weight: bold;">1\</font>*.* &gt;%tempdir%\dirlist.txt
+<font color="#FF0033">echo</font> ------------------------------
+<font color="#FF0033">echo</font> Letzte M&ouml;glichkeit abzubrechen!
+%mboxweg% @%tempdir%\dirlist.txt "Liste der Unterverzeichnisse in %<font color="#0000FF"
+style="font-weight: bold;">1</font><font color="#FF0000" style="font-weight:
+bold;">:</font>" <font color="#0000FF" style="font-weight: bold;">3</font> <font color= 
+"#0000FF" style="font-weight: bold;">2</font>
+if %errorlevel% == <font color="#0000FF" style="font-weight: bold;">2</font> goto abbruch
+if %errorlevel% == <font color="#0000FF" style="font-weight:
+bold;">1</font> goto nach_liste
+<font color="#FF0000" style="font-weight: bold;">:</font>nach_liste
+
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> m&ouml;gliche alte Batch-Datei l&ouml;schen
+if exist %tempdir%\d2a.bat <font color=
+"#FF0033">echo</font> Alte d2a.bat gefunden, wird gel&ouml;scht!
+if exist %tempdir%\d2a.bat del /q %tempdir%\d2a.bat
+
+<font color="#FF0000" style="font-weight: bold;">:</font>pwfrage
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Passwort setzen, wenn erw&uuml;nscht
+<font color="#FF0033">set</font> passwort=
+%mboxweg% "Soll ein Passwort gesetzt werden?" "Password" <font color="#0000FF" style= 
+"font-weight: bold;">3</font> <font color="#0000FF" style="font-weight: bold;">3</font>
+if %errorlevel% == <font color="#0000FF" style="font-weight:
+bold;">7</font> goto nach-pwfrage
+if %errorlevel% == <font color="#0000FF" style="font-weight: bold;">6</font> <font color= 
+"#FF0033">set</font> passwort=passwort
+%mboxweg% "Das Passwort wurde auf '%passwort%' gesetzt!" "Passwort" <font color="#0000FF"
+style="font-weight: bold;">1</font> <font color="#0000FF" style="font-weight:
+bold;">1</font>
+<font color="#FF0000" style="font-weight: bold;">:</font>nach-pwfrage
+
+<font color="#FF0000" style="font-weight: bold;">:</font>verz_loe_frage
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight:
+bold;">:</font> Abfrage, ob Unterverzeichnisse nach der Kompression gel&ouml;scht werden sollen
+%mboxweg% "Sollen die Unterverzeichnisse nach dem Packen gel&ouml;scht werden?" "Unterverzeichnisse l&ouml;schen?" <font color="#0000FF"
+style="font-weight: bold;">3</font> <font color="#0000FF" style="font-weight:
+bold;">3</font>
+if %errorlevel% == <font color="#0000FF" style="font-weight: bold;">7</font> <font color= 
+"#FF0033">set</font> loeschen=<font color="#0000FF" style="font-weight: bold;">0</font>
+if %errorlevel% == <font color="#0000FF" style="font-weight: bold;">7</font> goto archiv
+if %errorlevel% == <font color="#0000FF" style="font-weight:
+bold;">6</font> %mboxweg% "Sind Sie sicher? Wirklich l&ouml;schen?" "Achtung!" <font color="#0000FF"
+style="font-weight: bold;">2</font> <font color="#0000FF" style="font-weight:
+bold;">3</font>
+if %errorlevel% == <font color="#0000FF" style="font-weight: bold;">7</font> <font color= 
+"#FF0033">set</font> loeschen=<font color="#0000FF" style="font-weight: bold;">0</font>
+if %errorlevel% == <font color="#0000FF" style="font-weight: bold;">7</font> goto archiv
+if %errorlevel% == <font color="#0000FF" style="font-weight: bold;">6</font> <font color= 
+"#FF0033">set</font> loeschen=<font color="#0000FF" style="font-weight: bold;">1</font>
+%mboxweg% "Es werden somit nur die gepackten Verzeichnisse gel&ouml;scht." "Info" <font color="#0000FF"
+style="font-weight: bold;">1</font> <font color="#0000FF" style="font-weight:
+bold;">1</font>
+
+<font color="#FF0000" style="font-weight: bold;">:</font>archiv
+<font color="#FF0033">echo</font> Verzeichis als Laufwerk definieren.
+<font color="#FF0033">set</font> vir-drive=u<font color="#FF0000" style="font-weight: 
+ bold;">:</font>
+if exist %vir-drive% <font color="#FF0033">set</font> vir-drive=x<font color="#FF0000"
+style="font-weight: bold;">:</font>
+if exist %vir-drive% <font color="#FF0033">set</font> vir-drive=y<font color="#FF0000"
+style="font-weight: bold;">:</font>
+if exist %vir-drive% <font color="#FF0033">set</font> vir-drive=z<font color="#FF0000"
+style="font-weight: bold;">:</font>
+if exist %vir-drive% goto vir-drive-fehler
+if not exist %vir-drive% subst %vir-drive% /d
+<font color="#FF0033">echo</font> Virtuelles Laufwerk<font color="#FF0000" style= 
+"font-weight: bold;">:</font> %vir-drive%
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font><font color="#FF0033">pause</font>
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font>subst %vir-drive% %<font color="#0000FF" style="font-weight: 
+ bold;">1</font>%
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font>&gt; %tempdir%\d2a.bat <font color=
+"#FF0033">echo</font> subst %vir-drive% /d
+&gt; %tempdir%\d2a.bat <font color="#FF0033">echo</font> subst %vir-drive% %<font color= 
+"#0000FF" style="font-weight: bold;">1</font>%
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font><font color="#FF0033">echo</font> <font color=
+"#FF0033">pause</font> &gt;&gt; %tempdir%\d2a.bat
+<font color="#FF0033">echo</font> LMOD f&uuml;r Archiverstellung aufrufen.
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight:
+bold;">:</font> Die Textdatei mit der Liste der Unterverzeichnisse wird and LMOD &uuml;bergeben
+if "%passwort%"=="" goto arc-ohne-pw
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> DPP-Archiv
+&lt; %tempdir%\dirlist.txt %arbdir%\LMOD.COM /L* %arjdir%\arj32.exe a -hf4 -i6 -jm -r -a1 -g%passwort% "%vir-drive%\[].dpp" "%vir-drive%\[]\*.*"&gt;&gt; %tempdir%\d2a.bat
+goto LMOD-Errorlevel
+<font color="#FF0000" style="font-weight: bold;">:</font>arc-ohne-pw
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> ARJ-Archiv
+&lt; %tempdir%\dirlist.txt %arbdir%\LMOD.COM /L* %arjdir%\arj32.exe a -hf4 -i6 -jm -r -a1 "%vir-drive%\[].arj" "%vir-drive%\[]\*.*"&gt;&gt; %tempdir%\d2a.bat
+<font color="#FF0000" style="font-weight: bold;">:</font>LMOD-Errorlevel
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> LMOD Errorlevel <font color="#0000FF" style="font-weight: 
+ bold;">0</font><font color="#FF0000" style="font-weight:
+bold;">:</font> ok, <font color="#0000FF" style="font-weight: bold;">1</font><font color= 
+"#FF0000" style="font-weight: bold;">:</font> invalid token/expression, <font color= 
+"#0000FF" style="font-weight: bold;">2</font><font color="#FF0000" style="font-weight: 
+ bold;">:</font> invalid options
+if %errorlevel% == <font color="#0000FF" style="font-weight:
+bold;">0</font> goto nach_lmod_arc
+if %errorlevel% == <font color="#0000FF" style="font-weight:
+bold;">2</font> %mboxweg% "invalid options" "LMOD Fehler!" <font color="#0000FF" style= 
+"font-weight: bold;">2</font> <font color="#0000FF" style="font-weight: bold;">1</font>
+if %errorlevel% == <font color="#0000FF" style="font-weight:
+bold;">1</font> %mboxweg% "invalid token/expression" "LMOD Fehler!" <font color="#0000FF"
+style="font-weight: bold;">2</font> <font color="#0000FF" style="font-weight:
+bold;">1</font>
+goto abbruch
+<font color="#FF0000" style="font-weight: bold;">:</font>nach_lmod_arc
+<font color="#FF0033">echo</font> LMOD f&uuml;r Archiverstellung ist fertig.
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Erzeugte Batchdatei aufrufen.
+<font color="#FF0033">call</font> %tempdir%\d2a.bat
+<font color="#FF0033">echo</font> ------------------------------------
+<font color="#FF0033">echo</font> Die d2a.bat wurde soeben aufgerufen!
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight:
+bold;">:</font> Batch-Datei f&uuml;r das L&ouml;schen der gepackten Verzeichnisse erstellen
+if %loeschen% == <font color="#0000FF" style="font-weight:
+bold;">1</font> goto verz_loeschen
+goto temp_loeschen
+
+<font color="#FF0000" style="font-weight: bold;">:</font>verz_loeschen
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight:
+bold;">:</font> Die Textdatei mit der Liste der Unterverzeichnisse wird an LMOD &uuml;bergeben
+if "%passwort%"=="" goto wenn-arj-loe
+<font color="#FF0000" style="font-weight: bold;">:</font>wenn-dpp-loe
+&lt; %tempdir%\dirlist.txt %arbdir%\LMOD.COM /L* if exist "%vir-drive%\[].dpp" rmdir /q /s "%vir-drive%\[]"&gt; %tempdir%\verzloe.bat
+goto <font color="#FF0033">start</font>-del-bat
+<font color="#FF0000" style="font-weight: bold;">:</font>wenn-arj-loe
+&lt; %tempdir%\dirlist.txt %arbdir%\LMOD.COM /L* if exist "%vir-drive%\[].arj" rmdir /q /s "%vir-drive%\[]"&gt; %tempdir%\verzloe.bat
+<font color="#FF0000" style="font-weight: bold;">:</font><font color=
+"#FF0033">start</font>-del-bat
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Erzeugte Batchdatei aufrufen.
+<font color="#FF0033">call</font> %tempdir%\verzloe.bat
+rem del /q %tempdir%\verzloe.bat
+goto temp_loeschen
+
+<font color="#FF0000" style="font-weight: bold;">:</font>temp_loeschen
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> L&ouml;schen des tempor&auml;ren Verzeichnisses
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font>rmdir /s /q %tempdir%
+<font color="#FF0033">echo</font> ------------------
+goto ende
+
+<font color="#FF0000" style="font-weight: bold;">:</font>eingabe_fehlt
+<font color="#FF0033">echo</font>.
+<font color="#FF0033">echo</font> Eingabe fehlt!
+<font color=
+"#FF0033">echo</font> Das Programm DIR2ARC erwartet einen Verzeichnispfad als Eingabevariable!
+<font color="#FF0033">echo</font> Abbruch!
+%mboxweg% "Es wurde kein Verzeichnis angegeben!" "Abbruch!" <font color="#0000FF" style= 
+"font-weight: bold;">2</font> <font color="#0000FF" style="font-weight: bold;">1</font>
+goto ende
+
+<font color="#FF0000" style="font-weight: bold;">:</font>abbruch
+<font color="#FF0033">echo</font>.
+<font color="#FF0033">echo</font> Abbruch! Tsch&uuml;&szlig;!
+%mboxweg% "Der Vorgang wurde abgebrochen!" "Ende" <font color="#0000FF" style= 
+"font-weight: bold;">4</font> <font color="#0000FF" style="font-weight: bold;">1</font>
+goto ende
+
+<font color="#FF0000" style="font-weight: bold;">:</font>vir-drive-fehler
+<font color="#FF0033">echo</font>.
+<font color="#FF0033">echo</font> Abbruch!
+<font color="#FF0033">echo</font> Die m&ouml;glichen virtuellen Laufwerke (x<font color= 
+"#FF0000" style="font-weight: bold;">:</font> y<font color="#FF0000" style="font-weight: 
+ bold;">:</font> z<font color="#FF0000" style="font-weight:
+bold;">:</font>) sind alle in Gebrauch.
+%mboxweg% "Die m&ouml;glichen virtuellen Laufwerke (x<font color="#FF0000" style= 
+"font-weight: bold;">:</font> y<font color="#FF0000" style="font-weight:
+bold;">:</font> z<font color="#FF0000" style="font-weight:
+bold;">:</font>) sind alle in Gebrauch." "Abbruch!" <font color="#0000FF" style= 
+"font-weight: bold;">2</font> <font color="#0000FF" style="font-weight: bold;">1</font>
+goto ende
+
+<font color="#FF0000" style="font-weight: bold;">:</font>ende
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Passwort l&ouml;schen
+<font color="#FF0033">set</font> passwort=
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> virtulles Laufwerk l&ouml;schen
+subst %vir-drive% /d
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Zur&uuml;cketzen der anderen Variablen
+<font color="#FF0033">set</font> tempdri=
+<font color="#FF0033">set</font> arbdir=
+<font color="#FF0033">set</font> mboxweg=
+<font color="#FF0033">set</font> vir-drive=
+<font color="#FF0033">echo</font> Fertig und Tsch&uuml;&szlig;!
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font><font color="#FF0033">pause</font>
+exit
+</pre><!--INC:"heimatlink.inc"-->
+    <!-- ******************* Heimat Link *********************** -->
+    <hr size="6" width="99%" align="center">
+    <center>
+      <a href="heimat.ssi.shtml"><img src="bilder/homejump.gif" width="40" height="40"
+      alt="Heimat">
+      <br>
+      Home</a>
+    </center><!-- ******************* Heimat Link - Ende*********************** -->
+    <!--/INC:"heimatlink.inc"-->
+  </body>
+</html>

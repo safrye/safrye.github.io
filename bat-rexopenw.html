@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta name="generator" content=
+    "HTML Tidy for Windows (vers 25 January 2008), see www.w3.org">
+    <title>
+      rexopenw.bat
+    </title>
+    <meta name="author" content="Dr. Stephan Frye">
+    <meta name="description" content="">
+    <meta name="generator" content="HTML Studio">
+    <link type="text/css" rel="stylesheet" href="stil-grau.css">
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+  </head>
+  <body>
+    <pre>
+<font color="#FF0033">@echo</font> <font color="#FF0033">off</font>
+<font color="#FF0033">cls</font>
+
+<font color="#FF0033">set</font> exportweg=P<font color="#FF0000" style="font-weight: 
+ bold;">:</font>\BackUp
+<font color="#FF0033">set</font> exportdatei=openexpe.reg
+
+<font color="#FF0033">echo</font> Exportiere Registry-Schl&uuml;ssel
+<font color="#FF0033">echo</font> HKCU\Software\BAxBEx\OeffnenMitEx
+<font color="#FF0033">echo</font> nach
+<font color="#FF0033">echo</font> %exportweg%\%exportdatei%
+
+reg export HKCU\Software\BAxBEx\OeffnenMitEx %exportweg%\%exportdatei%
+<font color="#FF0033">pause</font>
+
+<font color="#FF0000" style="font-weight: bold;">:</font>Ende
+goto<font color="#FF0000" style="font-weight: bold;">:</font>eof
+</pre><!--INC:"heimatlink.inc"-->
+    <!-- ******************* Heimat Link *********************** -->
+    <hr size="6" width="99%" align="center">
+    <center>
+      <a href="heimat.ssi.shtml"><img src="bilder/homejump.gif" width="40" height="40"
+      alt="Heimat">
+      <br>
+      Home</a>
+    </center><!-- ******************* Heimat Link - Ende*********************** -->
+    <!--/INC:"heimatlink.inc"-->
+  </body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta name="generator" content=
+    "HTML Tidy for Windows (vers 25 January 2008), see www.w3.org">
+    <title>
+      Titel
+    </title>
+    <meta name="author" content="Dr. Stephan Frye">
+    <meta name="description" content="">
+    <meta name="generator" content="HTML Studio">
+    <link type="text/css" rel="stylesheet" href="stil-grau.css">
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+  </head>
+  <body>
+    <pre>
+<font color="#FF0033">@echo</font> <font color="#FF0033">off</font>
+Title MP3-Verzeichnis-eindampfen
+
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Setzen der Variablen und der Verzeichnisse
+<font color="#FF0033">set</font> lamedir=d<font color="#FF0000" style="font-weight:
+bold;">:</font>\data\dienst\bin
+<font color="#FF0033">set</font> arbdir=d<font color="#FF0000" style="font-weight:
+bold;">:</font>\data\dienst\bin
+<font color="#FF0033">set</font> binweg=d<font color="#FF0000" style="font-weight:
+bold;">:</font>\data\dienst\bin
+<font color="#FF0033">set</font> batdir=d<font color="#FF0000" style="font-weight:
+bold;">:</font>\data\dienst\mp3
+<font color="#FF0033">set</font> tempdir=%tmp%\mp3d-tmp
+<font color="#FF0033">set</font> mboxweg=%binweg%\msgbox.exe
+<font color="#FF0033">set</font> wprompt=%binweg%\Wprompt.exe
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font><font color="#FF0033">set</font> rdtmp=r<font color=
+"#FF0000" style="font-weight: bold;">:</font>\tmp
+if exist r<font color="#FF0000" style="font-weight: bold;">:</font>\ <font color=
+"#FF0033">set</font> rdtmp=r<font color="#FF0000" style="font-weight: bold;">:</font>\tmp
+if not exist %rdtmp% md %rdtmp%
+if exist %rdtmp% <font color="#FF0033">set</font> tempdir=%rdtmp%\mp3dampf
+
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Arbeitsverzeichnis erstellen
+if not exist %tempdir% md %tempdir%
+
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> auf vorhandene Eingabe testen
+if not exist "%<font color="#0000FF" style="font-weight:
+bold;">1</font>%" goto eingabe_fehlt
+<font color="#FF0033">echo</font> Ausgew&bdquo;hltes Verzeichnis<font color="#FF0000"
+style="font-weight: bold;">:</font> %<font color="#0000FF" style="font-weight:
+bold;">1</font>
+
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> MP3-Dateien auflisten
+<font color="#FF0033">echo</font> ------------------------------
+<font color="#FF0033">echo</font> Vorhandene MP3-Dateien<font color="#FF0000" style= 
+"font-weight: bold;">:</font>
+dir /b /o<font color="#FF0000" style="font-weight: bold;">:</font>n %<font color=
+"#0000FF" style="font-weight: bold;">1\</font>*.mp3
+dir /b /o<font color="#FF0000" style="font-weight: bold;">:</font>n %<font color=
+"#0000FF" style="font-weight: bold;">1\</font>*.mp3 &gt;%tempdir%\mp3list.txt
+<font color="#FF0033">echo</font> ------------------------------
+<font color="#FF0033">echo</font> Letzte M&ouml;glichkeit abzubrechen!
+%mboxweg% @%tempdir%\mp3list.txt "Liste der MP3-Dateien<font color="#FF0000" style= 
+"font-weight: bold;">:</font>" <font color="#0000FF" style="font-weight:
+bold;">3</font> <font color="#0000FF" style="font-weight: bold;">2</font>
+if %errorlevel% == <font color="#0000FF" style="font-weight: bold;">2</font> goto abbruch
+if %errorlevel% == <font color="#0000FF" style="font-weight:
+bold;">1</font> goto nach_liste
+<font color="#FF0000" style="font-weight: bold;">:</font>nach_liste
+
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> m&ouml;gliche alte Batch-Datei l&ouml;schen
+if exist %tempdir%\m3d.bat <font color=
+"#FF0033">echo</font> Alte m3d.bat gefunden, wird gel&ouml;scht!
+if exist %tempdir%\m3d.bat del /q %tempdir%\m3d.bat
+
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Spielliste erstellen
+%wprompt% "Spielliste" "Soll eine einfache Spielliste erstellt werden?" YesNo <font color="#0000FF"
+style="font-weight: bold;">1</font> ?
+if %errorlevel% == <font color="#0000FF" style="font-weight: bold;">1</font> <font color= 
+"#FF0033">set</font> pls=<font color="#0000FF" style="font-weight: bold;">1</font>
+if %errorlevel% == <font color="#0000FF" style="font-weight: bold;">2</font> <font color= 
+"#FF0033">set</font> pls=<font color="#0000FF" style="font-weight: bold;">0</font>
+
+<font color="#FF0000" style="font-weight: bold;">:</font>mp3alt_loe_frage
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Abfrage, ob alte mp3 gel&ouml;scht werden sollen
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight:
+bold;">:</font>%mboxweg% "Sollen die alten MP3-Dateien nach dem eindampfen gel&ouml;scht werden?" "Alte MP3 l&ouml;schen?" <font color="#0000FF"
+style="font-weight: bold;">3</font> <font color="#0000FF" style="font-weight:
+bold;">3</font>
+%wprompt% "Alte MP3 l&ouml;schen?" "Sollen die alten MP3-Dateien nach dem eindampfen gel&ouml;scht werden?" YesNo <font color="#0000FF"
+style="font-weight: bold;">2</font> ?
+if %errorlevel% == <font color="#0000FF" style="font-weight: bold;">2</font> <font color= 
+"#FF0033">set</font> loeschen=<font color="#0000FF" style="font-weight: bold;">0</font>
+if %errorlevel% == <font color="#0000FF" style="font-weight: bold;">2</font> goto archiv
+if %errorlevel% == <font color="#0000FF" style="font-weight:
+bold;">1</font> %wprompt% "Achtung!" "Sind Sie sicher? Wirklich l&ouml;schen?" YesNo <font color="#0000FF"
+style="font-weight: bold;">2</font> ?
+if %errorlevel% == <font color="#0000FF" style="font-weight: bold;">2</font> <font color= 
+"#FF0033">set</font> loeschen=<font color="#0000FF" style="font-weight: bold;">0</font>
+if %errorlevel% == <font color="#0000FF" style="font-weight: bold;">2</font> goto archiv
+if %errorlevel% == <font color="#0000FF" style="font-weight: bold;">1</font> <font color= 
+"#FF0033">set</font> loeschen=<font color="#0000FF" style="font-weight: bold;">1</font>
+%wprompt% "Info" "Es werden somit nur die eingedampfen MP3 gel&ouml;scht." Ok !
+
+<font color="#FF0000" style="font-weight: bold;">:</font>archiv
+<font color="#FF0033">echo</font> Verzeichis als Laufwerk definieren.
+<font color="#FF0033">set</font> vir-drive=x<font color="#FF0000" style="font-weight: 
+ bold;">:</font>
+if exist %vir-drive% subst %vir-drive% /d
+if exist %vir-drive% <font color="#FF0033">set</font> vir-drive=y<font color="#FF0000"
+style="font-weight: bold;">:</font>
+if exist %vir-drive% subst %vir-drive% /d
+if exist %vir-drive% <font color="#FF0033">set</font> vir-drive=z<font color="#FF0000"
+style="font-weight: bold;">:</font>
+if exist %vir-drive% subst %vir-drive% /d
+if exist %vir-drive% goto vir-drive-fehler
+<font color="#FF0033">echo</font> Virtuelles Laufwerk<font color="#FF0000" style= 
+"font-weight: bold;">:</font> %vir-drive%
+
+&gt; %tempdir%\m3d.bat <font color="#FF0033">echo</font> subst %vir-drive% %<font color= 
+"#0000FF" style="font-weight: bold;">1</font>%
+
+<font color="#FF0033">echo</font> LMOD f&uuml;r Batch-Datei-Erstellung aufrufen.
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight:
+bold;">:</font> Die Textdatei mit der Liste der Unterverzeichnisse wird and LMOD &uuml;bergeben
+
+<font color="#FF0000" style="font-weight: bold;">:</font> MP3-Dampf
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight:
+bold;">:</font> Bat-Datei f&uuml;r die Ausf&uuml;hrung von LAME mit LMOD erstellen
+
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> <font color="#0000FF" style="font-weight:
+bold;">1.</font>) Abfrage nach schon existierender eingedampfter Datei
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight:
+bold;">:</font>&lt; %tempdir%\mp3list.txt %arbdir%\LMOD.COM /L* if exist "%vir-drive%\[]-V6q1-kondensat.mp3" %mboxweg% "Die eingedampfte Datei von [] existiert bereits!" "Achtung" <font color="#0000FF"
+style="font-weight: bold;">2</font> <font color="#0000FF" style="font-weight:
+bold;">1</font> <font color="#0000FF" style="font-weight:
+bold;">3</font>  &gt;&gt; %tempdir%\m3d.bat
+
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> <font color="#0000FF" style="font-weight:
+bold;">2.</font>) Anweisung zum eindampfen der Datei erstellen
+&lt; %tempdir%\mp3list.txt %arbdir%\LMOD.COM /L* %lamedir%\lame.exe  -V <font color= 
+"#0000FF" style="font-weight: bold;">6</font> --vbr-new -q <font color="#0000FF" style= 
+"font-weight: bold;">1</font> --athaa-sensitivity <font color="#0000FF" style= 
+"font-weight:
+bold;">1</font> "%vir-drive%\[]" "%vir-drive%\[]-V6q1-kondensat.mp3" &gt;&gt; %tempdir%\m3d.bat
+
+<font color="#FF0000" style="font-weight: bold;">:</font>LMOD-Errorlevel
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> LMOD Errorlevel <font color="#0000FF" style="font-weight: 
+ bold;">0</font><font color="#FF0000" style="font-weight:
+bold;">:</font> ok, <font color="#0000FF" style="font-weight: bold;">1</font><font color= 
+"#FF0000" style="font-weight: bold;">:</font> invalid token/expression, <font color= 
+"#0000FF" style="font-weight: bold;">2</font><font color="#FF0000" style="font-weight: 
+ bold;">:</font> invalid options
+if %errorlevel% == <font color="#0000FF" style="font-weight:
+bold;">0</font> goto nach_mp3-dampf
+if %errorlevel% == <font color="#0000FF" style="font-weight:
+bold;">2</font> %mboxweg% "invalid options" "LMOD Fehler!" <font color="#0000FF" style= 
+"font-weight: bold;">2</font> <font color="#0000FF" style="font-weight: bold;">1</font>
+if %errorlevel% == <font color="#0000FF" style="font-weight:
+bold;">1</font> %mboxweg% "invalid token/expression" "LMOD Fehler!" <font color="#0000FF"
+style="font-weight: bold;">2</font> <font color="#0000FF" style="font-weight:
+bold;">1</font>
+goto abbruch
+<font color="#FF0000" style="font-weight: bold;">:</font>nach_mp3-dampf
+
+<font color="#FF0033">echo</font> LMOD ist fertig.
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Erzeugte Batchdatei aufrufen.
+<font color="#FF0033">call</font> %tempdir%\m3d.bat
+<font color="#FF0033">echo</font> ------------------------------------
+<font color="#FF0033">echo</font> Die m3d.bat wurde soeben aufgerufen!
+
+if %pls% == <font color="#0000FF" style="font-weight: bold;">1</font> <font color=
+"#FF0033">call</font> <font color="#FF0000" style="font-weight: bold;">:</font>splst
+
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight:
+bold;">:</font> Batch-Datei f&uuml;r das L&ouml;schen der gepackten Verzeichnisse erstellen
+if %loeschen% == <font color="#0000FF" style="font-weight:
+bold;">1</font> goto mp3alt_loeschen
+goto temp_loeschen
+
+<font color="#FF0000" style="font-weight: bold;">:</font>mp3alt_loeschen
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight:
+bold;">:</font> Die Textdatei mit der Liste der MP3-Dateien wird an LMOD &uuml;bergeben
+&lt; %tempdir%\mp3list.txt %arbdir%\LMOD.COM /L* if exist "%vir-drive%\[]-V6q1-kondensat.mp3" del /q "%vir-drive%\[]" &gt;&gt; %tempdir%\altmp3loe.bat
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Erzeugte Batchdatei aufrufen.
+<font color="#FF0033">call</font> %tempdir%\altmp3loe.bat
+goto temp_loeschen
+
+<font color="#FF0000" style="font-weight: bold;">:</font>temp_loeschen
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> L&ouml;schen des tempor&auml;ren Verzeichnisses
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font>rmdir /s /q %tempdir%
+<font color="#FF0033">echo</font> ------------------
+goto ende
+
+<font color="#FF0000" style="font-weight: bold;">:</font>eingabe_fehlt
+<font color="#FF0033">echo</font>.
+<font color="#FF0033">echo</font> Eingabe fehlt!
+<font color=
+"#FF0033">echo</font> Das Programm MP3-Verzeichnis-Eindampfen erwartet einen Verzeichnispfad als Eingabevariable!
+<font color="#FF0033">echo</font> Abbruch!
+%mboxweg% "Es wurde kein Verzeichnis angegeben!" "Abbruch!" <font color="#0000FF" style= 
+"font-weight: bold;">2</font> <font color="#0000FF" style="font-weight: bold;">1</font>
+goto ende
+
+<font color="#FF0000" style="font-weight: bold;">:</font>abbruch
+<font color="#FF0033">echo</font>.
+<font color="#FF0033">echo</font> Abbruch! Tsch&uuml;&szlig;!
+%mboxweg% "Der Vorgang wurde abgebrochen!" "Ende" <font color="#0000FF" style= 
+"font-weight: bold;">4</font> <font color="#0000FF" style="font-weight: bold;">1</font>
+goto ende
+
+<font color="#FF0000" style="font-weight: bold;">:</font>vir-drive-fehler
+<font color="#FF0033">echo</font>.
+<font color="#FF0033">echo</font> Abbruch!
+<font color="#FF0033">echo</font> Die m&ouml;glichen virtuellen Laufwerke (x<font color= 
+"#FF0000" style="font-weight: bold;">:</font> y<font color="#FF0000" style="font-weight: 
+ bold;">:</font> z<font color="#FF0000" style="font-weight:
+bold;">:</font>) sind alle in Gebrauch.
+%mboxweg% "Die m&ouml;glichen virtuellen Laufwerke (x<font color="#FF0000" style= 
+"font-weight: bold;">:</font> y<font color="#FF0000" style="font-weight:
+bold;">:</font> z<font color="#FF0000" style="font-weight:
+bold;">:</font>) sind alle in Gebrauch." "Abbruch!" <font color="#0000FF" style= 
+"font-weight: bold;">2</font> <font color="#0000FF" style="font-weight: bold;">1</font>
+goto ende
+
+<font color="#FF0000" style="font-weight: bold;">:</font>ende
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> virtulles Laufwerk l&ouml;schen
+subst %vir-drive% /d
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Zur&uuml;cksetzen der anderen Variablen
+<font color="#FF0033">set</font> tempdri=
+<font color="#FF0033">set</font> arbdir=
+<font color="#FF0033">set</font> mboxweg=
+<font color="#FF0033">set</font> vir-drive=
+<font color="#FF0033">echo</font> Fertig und Tsch&uuml;&szlig;!
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font><font color="#FF0033">pause</font>
+exit
+goto<font color="#FF0000" style="font-weight: bold;">:</font>eof
+
+<font color="#FF0000" style="font-weight: bold;">:</font>splst
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight:
+bold;">:</font> Die Textdatei mit der Liste der MP3-Dateien wird an LMOD &uuml;bergeben
+&lt; %tempdir%\mp3list.txt %arbdir%\LMOD.COM /L* []-V6q1-kondensat.mp3 &gt;&gt; %vir-drive%\Spielliste.m3u
+
+</pre><!--INC:"heimatlink.inc"-->
+    <!-- ******************* Heimat Link *********************** -->
+    <hr size="6" width="99%" align="center">
+    <center>
+      <a href="heimat.ssi.shtml"><img src="bilder/homejump.gif" width="40" height="40"
+      alt="Heimat">
+      <br>
+      Home</a>
+    </center><!-- ******************* Heimat Link - Ende*********************** -->
+    <!--/INC:"heimatlink.inc"-->
+  </body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta name="generator" content=
+    "HTML Tidy for Windows (vers 25 January 2008), see www.w3.org">
+    <title>
+      ORDIKONE.bat
+    </title>
+    <meta name="author" content="Dr. Stephan Frye">
+    <meta name="description" content="">
+    <meta name="generator" content="HTML Studio">
+    <link type="text/css" rel="stylesheet" href="stil-grau.css">
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+  </head>
+  <body>
+    <pre>
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> OrdIkone.bat
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Ikone einer Datei dem zugeh&ouml;ringen Ordner zuordnen
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Aufruf durch das "Senden an ..." Men&uuml; im Explorer
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> nur f&uuml;r die Verwendung unter <font color="#0000FF"
+style="font-weight: bold;">4DOS</font>
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Version <font color="#0000FF" style="font-weight:
+bold;">0.1</font> - <font color="#0000FF" style="font-weight:
+bold;">01.Juni</font> <font color="#0000FF" style="font-weight:
+bold;">2001</font> - Stephan Frye
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font> Version <font color="#0000FF" style="font-weight:
+bold;">0.2</font> - <font color="#0000FF" style="font-weight:
+bold;">28.Juni</font> <font color="#0000FF" style="font-weight:
+bold;">2001</font> - Stephan Frye
+
+<font color="#FF0033">@echo</font> <font color="#FF0033">off</font>
+
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font><font color="#FF0033">echo</font> Eingabe ist<font color= 
+"#FF0000" style="font-weight: bold;">:</font> %<font color="#0000FF" style="font-weight: 
+ bold;">1</font>
+
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font><font color="#FF0033">echo</font> Datei ist<font color= 
+"#FF0000" style="font-weight: bold;">:</font> %@filename[%<font color="#0000FF" style= 
+"font-weight: bold;">1</font>]
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font><font color="#FF0033">echo</font> Pfad ist<font color= 
+"#FF0000" style="font-weight: bold;">:</font> %@path[%<font color="#0000FF" style= 
+"font-weight: bold;">1</font>]
+
+<font color="#FF0033">echo</font> [.ShellClassInfo]        &gt;&gt;%@path[%<font color= 
+"#0000FF" style="font-weight: bold;">1</font>]desktop.ini
+<font color="#FF0033">echo</font> IconFile=%@filename[%<font color="#0000FF" style= 
+"font-weight: bold;">1</font>]  &gt;&gt;%@path[%<font color="#0000FF" style="font-weight: 
+ bold;">1</font>]desktop.ini
+<font color="#FF0033">echo</font> IcoIndex=<font color="#0000FF" style="font-weight:
+bold;">0</font>               &gt;&gt;%@path[%<font color="#0000FF" style="font-weight: 
+ bold;">1</font>]desktop.ini
+<font color="#FF0033">echo</font> InfoTip=                 &gt;&gt;%@path[%<font color= 
+"#0000FF" style="font-weight: bold;">1</font>]desktop.ini
+
+<font color="#FF0000" style="font-weight: bold;">:</font><font color="#FF0000" style= 
+"font-weight: bold;">:</font>type %@path[%<font color="#0000FF" style="font-weight:
+bold;">1</font>]desktop.ini
+
+ATTRIB +h %@path[%<font color="#0000FF" style="font-weight: bold;">1</font>]desktop.ini
+ATTRIB /d +r %@path[%<font color="#0000FF" style="font-weight: bold;">1</font>]
+
+<font color="#FF0000" style="font-weight: bold;">:</font>Ende
+</pre><!--INC:"heimatlink.inc"-->
+    <!-- ******************* Heimat Link *********************** -->
+    <hr size="6" width="99%" align="center">
+    <center>
+      <a href="heimat.ssi.shtml"><img src="bilder/homejump.gif" width="40" height="40"
+      alt="Heimat">
+      <br>
+      Home</a>
+    </center><!-- ******************* Heimat Link - Ende*********************** -->
+    <!--/INC:"heimatlink.inc"-->
+  </body>
+</html>
